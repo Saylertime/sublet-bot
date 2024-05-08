@@ -132,6 +132,9 @@ def final(message):
 def handle_text_in_move_in_state(message):
     bot.reply_to(message, "Пожалуйста, выберите дату в календаре.")
 
-@bot.message_handler(func=lambda message: True, state=OverallState.photos)
+@bot.message_handler(content_types=['text', 'document'], func=lambda message: True, state=OverallState.photos)
 def handle_text_messages(message):
-    bot.reply_to(message, "Пожалуйста, отправьте фотографии.")
+    if message.content_type == 'text':
+        bot.reply_to(message, "Пожалуйста, отправьте фотографии.")
+    elif message.content_type == 'document':
+        bot.reply_to(message, "Пожалуйста, отправьте фотографии, а не документы.")
