@@ -79,7 +79,7 @@ def move_in(message):
 first_photo_time = {}
 
 
-@bot.message_handler(content_types=['photo', 'document'], state=OverallState.photos)
+@bot.message_handler(content_types=['photo'], state=OverallState.photos)
 def photos(message):
     if message.from_user.id not in first_photo_time:
         first_photo_time[message.from_user.id] = time.time()
@@ -87,8 +87,8 @@ def photos(message):
     timestamp = int(time.time() * 1000)
     if message.content_type == 'photo':
         photo = message.photo[-1]
-    elif message.content_type == 'document':
-        photo = message.document
+    # elif message.content_type == 'document':
+    #     photo = message.document
     else:
         bot.send_message('Нужны фотографии')
 
