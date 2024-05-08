@@ -104,40 +104,28 @@ def photos(message):
 
 
 def final(message):
+    photo_variables = {}
+    first_photo_time.pop(message.from_user.id, None)
+
     with bot.retrieve_data(message.from_user.id) as data:
-        user_photos = data['photos']
-    for photo in user_photos:
-        file_extension = os.path.splitext(photo)[1].lower()
-        bot.send_message(message.from_user.id, str(file_extension))
-        if file_extension in ['.jpeg', '.jpg', '.png']:
+        for i, photo_path in enumerate(data['photos'][:8]):
+            photo_variables[f'photo{i + 1}'] = photo_path
 
-            photo_variables = {}
-            first_photo_time.pop(message.from_user.id, None)
+        new_post(username=message.from_user.username,
+                 city=data['city'],
+                 address=data['address'],
+                 type=data['type'],
+                 description=data['description'],
+                 date_in=data["date_in"],
+                 date_out=data["date_out"],
+                 **photo_variables)
 
-            with bot.retrieve_data(message.from_user.id) as data:
-                for i, photo_path in enumerate(data['photos'][:8]):
-                    photo_variables[f'photo{i + 1}'] = photo_path
+    bot.delete_state(message.from_user.id)
 
-                new_post(username=message.from_user.username,
-                         city=data['city'],
-                         address=data['address'],
-                         type=data['type'],
-                         description=data['description'],
-                         date_in=data["date_in"],
-                         date_out=data["date_out"],
-                         **photo_variables)
-
-            bot.delete_state(message.from_user.id)
-
-            buttons = [('Посмотреть или отредактировать мои объявления', 'Отредактировать'),
-                       ('⬇⬇⬇ Назад в меню ⬇⬇⬇', 'Назад в меню')]
-            markup = create_markup(buttons)
-            bot.send_message(message.from_user.id, 'Пост опубликован!!', reply_markup=markup)
-            photos(message)
-        else:
-            print(f"Файл имеет недопустимое расширение: {file_extension}")
-            bot.send_message(message.from_user.id, "Загружены некорректные фото. Они должны быть в формате jpeg или png")
-            photos(message)
+    buttons = [('Посмотреть или отредактировать мои объявления', 'Отредактировать'),
+               ('⬇⬇⬇ Назад в меню ⬇⬇⬇', 'Назад в меню')]
+    markup = create_markup(buttons)
+    bot.send_message(message.from_user.id, 'Пост опубликован!!', reply_markup=markup)
 
 
 @bot.message_handler(func=lambda message: True, state=OverallState.move_in)
