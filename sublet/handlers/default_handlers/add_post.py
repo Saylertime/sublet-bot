@@ -109,8 +109,10 @@ def final(message):
     for photo in user_photos:
         file_extension = os.path.splitext(photo)[1].lower()
         if not file_extension in ['.jpeg', '.jpg', '.png']:
-            bot.send_message(message.from_user.id, "Загружены некорректные фото. "
-                                                   "Они должны быть в формате jpeg или png. Попробуйте еще раз")
+            pass
+        else:
+            print(f"Файл имеет недопустимое расширение: {file_extension}")
+            bot.send_message(message.from_user.id, "Загружены некорректные фото. Они должны быть в формате jpeg или png")
             photos(message)
             return
 
