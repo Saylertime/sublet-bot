@@ -108,6 +108,7 @@ def final(message):
         user_photos = data['photos']
     for photo in user_photos:
         file_extension = os.path.splitext(photo)[1].lower()
+        bot.send_message(message.from_user.id, str(file_extension))
         if file_extension in ['.jpeg', '.jpg', '.png']:
 
             photo_variables = {}
