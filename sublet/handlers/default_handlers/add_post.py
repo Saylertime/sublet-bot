@@ -85,12 +85,7 @@ def photos(message):
         first_photo_time[message.from_user.id] = time.time()
         threading.Timer(5, final, args=(message,)).start()
     timestamp = int(time.time() * 1000)
-    if message.content_type == 'photo':
-        photo = message.photo[-1]
-    # elif message.content_type == 'document':
-    #     photo = message.document
-    else:
-        bot.send_message('Нужны фотографии')
+    photo = message.photo[-1]
 
     file_info = bot.get_file(photo.file_id)
     downloaded_file = bot.download_file(file_info.file_path)

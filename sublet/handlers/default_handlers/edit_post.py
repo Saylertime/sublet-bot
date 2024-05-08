@@ -123,19 +123,14 @@ def change_photos(message):
 
 first_photo_time = {}
 
-@bot.message_handler(content_types=['photo', 'document'], state=OverallState.change_photos)
+@bot.message_handler(content_types=['photo'], state=OverallState.change_photos)
 def edit_photos(message):
     if message.from_user.id not in first_photo_time:
         first_photo_time[message.from_user.id] = time.time()
         threading.Timer(5, final_photo, args=(message,)).start()
 
     timestamp = int(time.time() * 1000)
-    if message.content_type == 'photo':
-        photo = message.photo[-1]
-    elif message.content_type == 'document':
-        photo = message.document
-    else:
-        bot.send_message('Нужны фотографии')
+    photo = message.photo[-1]
 
     file_info = bot.get_file(photo.file_id)
     downloaded_file = bot.download_file(file_info.file_path)
@@ -154,6 +149,14 @@ def final_photo(message):
         update_photos(post_id, data['photos'])
     bot.send_message(message.from_user.id, 'Новые фото загружены')
     choose_edit_button(message)
+
+
+@bot.message_handler(content_types=['text', 'document'], func=lambda message: True, state=OverallState.change_photos)
+def handle_text_messages(message):
+    if message.content_type == 'text':
+        bot.reply_to(message, "Пожалуйста, отправьте фотографии.")
+    elif message.content_type == 'document':
+        bot.reply_to(message, "Пожалуйста, отправьте фотографии, а не документы.")
 
 
 def see_post(message):
@@ -235,4 +238,3 @@ def is_all_right_callback(call):
         add_post(call)
     elif call.data == 'Посмотреть объявления':
         edit_post(call)
-
