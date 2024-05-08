@@ -8,6 +8,7 @@ import time
 import threading
 from keyboards.reply.calendar import show_calendar
 from keyboards.reply.create_markup import create_markup
+from telebot.types import InputMediaPhoto
 
 
 @bot.message_handler(commands=['add_post'])
@@ -103,6 +104,16 @@ def photos(message):
 
 
 def final(message):
+    with bot.retrieve_data(message.from_user.id) as data:
+        user_photos = data['photos']
+    for photo in user_photos:
+        file_extension = os.path.splitext(photo)[1].lower()
+        if file_extension in ['.jpeg', '.jpg', '.png']:
+            pass
+        else:
+            print(f"Файл имеет недопустимое расширение: {file_extension}")
+    bot.send_message(message.from_user.id, "Загружены некорректные фото. Они должны быть в формате jpeg или png")
+
     photo_variables = {}
     first_photo_time.pop(message.from_user.id, None)
 
@@ -125,6 +136,7 @@ def final(message):
                ('⬇⬇⬇ Назад в меню ⬇⬇⬇', 'Назад в меню')]
     markup = create_markup(buttons)
     bot.send_message(message.from_user.id, 'Пост опубликован!!', reply_markup=markup)
+    photos(message)
 
 
 @bot.message_handler(func=lambda message: True, state=OverallState.move_in)
