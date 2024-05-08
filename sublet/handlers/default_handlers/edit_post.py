@@ -169,11 +169,15 @@ def see_post(message):
     else:
         bot.send_message(message.from_user.id, "Фотографии не найдены")
         return
-
+    try:
+        bot.delete_message(message.message.chat.id, message.message.message_id)
+    except:
+        pass
     bot.send_media_group(message.from_user.id, media)
-    buttons = [('Вернуться назад', 'Назад'),
-               ('Создать объявление', 'Создать объявление'),
-               ('Посмотреть все мои объявления', 'Посмотреть объявления')]
+    buttons = [('Создать новое объявление', 'Создать объявление'),
+               ('Посмотреть все мои объявления', 'Посмотреть объявления'),
+               ('⬇ Вернуться к этому объявлению ⬇', 'Назад'),
+               ('⬇⬇⬇ Вернуться в меню ⬇⬇⬇', 'Назад'),]
     markup = create_markup(buttons)
     bot.send_message(message.from_user.id, 'Что дальше?', reply_markup=markup)
 

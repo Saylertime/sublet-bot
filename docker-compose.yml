@@ -5,7 +5,7 @@ services:
       context: sublet
     stop_signal: SIGKILL
     ports:
-      - 5001
+      - 5004:5004
     networks:
       - webnet
     depends_on:

@@ -10,9 +10,9 @@ from handlers.default_handlers.free import free
 def start_message(message):
     bot.delete_state(message.from_user.id)
     logger.warning(f'{message.from_user.username} — команда START')
-    buttons = [('Найти саблет', 'Найти'),
-               ('Добавить объявление', 'Добавить'),
-               ('Отредактировать объявление', 'Отредактировать')]
+    buttons = [('🔎 Найти саблет 🔎', 'Найти'),
+               ('➕ Добавить объявление ➕', 'Добавить'),
+               ('🖊 Отредактировать объявление 🖊', 'Отредактировать')]
     markup = create_markup(buttons)
     try:
         lol = message.message.message_id
