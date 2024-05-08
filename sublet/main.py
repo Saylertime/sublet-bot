@@ -37,7 +37,7 @@ def webhook():
     return 'ok', 200
 
 def set_webhook():
-    response = requests.get(f'https://api.telegram.org/bot{BOT_TOKEN}/setWebhook?url={WEBHOOK_URL}/webhook_report')
+    response = requests.get(f'https://api.telegram.org/bot{BOT_TOKEN}/setWebhook?url={WEBHOOK_URL}/webhook')
     print(response.json())
 
 def webhook_thread():
