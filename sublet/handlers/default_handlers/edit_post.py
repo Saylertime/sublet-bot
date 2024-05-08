@@ -161,25 +161,25 @@ def see_post(message):
     with bot.retrieve_data(message.from_user.id) as data:
         msg, user_photos = get_user_info_and_photos(data['post_id'])
 
-    if user_photos:
+    try:
         media.append(InputMediaPhoto(open(user_photos[0], 'rb').read(), caption=msg))
         for photo_path in user_photos[1:]:
             with open(photo_path, 'rb') as photo_file:
                 media.append(InputMediaPhoto(photo_file.read()))
-    else:
-        bot.send_message(message.from_user.id, "Фотографии не найдены")
-        return
-    try:
-        bot.delete_message(message.message.chat.id, message.message.message_id)
+        try:
+            bot.delete_message(message.message.chat.id, message.message.message_id)
+        except:
+            pass
+        bot.send_media_group(message.from_user.id, media)
+        buttons = [('Создать новое объявление', 'Создать объявление'),
+                   ('Посмотреть все мои объявления', 'Посмотреть объявления'),
+                   ('⬇ Вернуться к этому объявлению ⬇', 'Назад'),
+                   ('⬇⬇⬇ Вернуться в меню ⬇⬇⬇', 'Назад'),]
+        markup = create_markup(buttons)
+        bot.send_message(message.from_user.id, 'Что дальше?', reply_markup=markup)
     except:
-        pass
-    bot.send_media_group(message.from_user.id, media)
-    buttons = [('Создать новое объявление', 'Создать объявление'),
-               ('Посмотреть все мои объявления', 'Посмотреть объявления'),
-               ('⬇ Вернуться к этому объявлению ⬇', 'Назад'),
-               ('⬇⬇⬇ Вернуться в меню ⬇⬇⬇', 'Назад'),]
-    markup = create_markup(buttons)
-    bot.send_message(message.from_user.id, 'Что дальше?', reply_markup=markup)
+        bot.send_message(message.from_user.id, "Загружены некорректные фото. Они должны быть в формате jpeg или png")
+        return
 
 
 

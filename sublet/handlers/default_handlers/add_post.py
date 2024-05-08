@@ -12,6 +12,7 @@ from keyboards.reply.create_markup import create_markup
 
 @bot.message_handler(commands=['add_post'])
 def add_post(message):
+    bot.delete_state(message.from_user.id)
     logger.warning(f'{message.from_user.username} — команда ADD_POST')
     bot.set_state(message.from_user.id, state=OverallState.add_post)
     with bot.retrieve_data(message.from_user.id) as data:
