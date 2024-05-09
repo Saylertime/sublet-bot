@@ -20,8 +20,8 @@ import threading
 @bot.message_handler(commands=['edit_post'])
 def edit_post(message):
     bot.delete_state(message.from_user.id)
-    try:
-        buttons = find_my_sublets(message.from_user.username)
+    buttons = find_my_sublets(message.from_user.username)
+    if buttons:
         buttons.append(('⬇⬇⬇ Назад в меню ⬇⬇⬇', 'Назад в меню'))
         markup = create_markup(buttons)
         try:
@@ -30,7 +30,7 @@ def edit_post(message):
                              message.message.chat.id, message.message.message_id, reply_markup=markup)
         except:
             bot.send_message(message.from_user.id, "Какое объявление нужно отредактировать?", reply_markup=markup)
-    except:
+    else:
         buttons = ([('Создать объявление', 'Создать объявление')])
         markup = create_markup(buttons)
         bot.edit_message_text("У вас пока нет объявлений",
