@@ -160,9 +160,6 @@ def handle_text_messages(message):
         bot.reply_to(message, "Пожалуйста, отправьте фотографии, а не документы.")
 
 
-# def delete_sublet(message):
-#
-
 def see_post(message):
     media = []
     with bot.retrieve_data(message.from_user.id) as data:
@@ -220,7 +217,6 @@ def choose_buttons_callback(call):
     elif call.data == 'Изменить удалить':
         try:
             delete_post(post_id)
-            bot.send_message(call.from_user.id, 'Пост удален!')
             edit_post(call)
         except:
             bot.send_message(call.from_user.id, 'Что-то пошло не так. Возможно, пост уже удален?')

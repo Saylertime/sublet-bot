@@ -200,8 +200,10 @@ def get_user_info_and_photos(post_id):
 
     if info_and_photos:
         username, city, date_in, date_out, type, address, description, *photos = info_and_photos
-        user_info = f"🏠 Город: {city}\n📅 Свободные даты: \n{date_in} — {date_out}\n" \
-                    f"🛌 Тип: {type}\n📬 Адрес: {address}\n\n{description}\n\nОпубликовал: @{username}"
+        f_date_in = date_in.strftime("%d-%m-%Y")
+        f_date_out = date_out.strftime("%d-%m-%Y")
+        user_info = f"🏠 Город: {city}\n🛌 Тип: {type}\n📬 Адрес: {address}\n" \
+                    f"📅 Свободные даты: \n{f_date_in} — {f_date_out}\n\n\n{description}\n\nОпубликовал: @{username}"
         user_photos = [photo for photo in photos if photo is not None]
     else:
         user_info = "Информация о пользователе не найдена"
@@ -226,8 +228,10 @@ def get_active_sublets(city, date):
     for info_and_photos in all_info_and_photos:
         if info_and_photos:
             username, city, date_in, date_out, type, address, description, *photos = info_and_photos
-            user_info = f"🏠 Город: {city}\n📅 Свободные даты: \n{date_in} — {date_out}\n" \
-                        f"🛌 Тип: {type}\n📬 Адрес: {address}\n\n{description}\n\n Опубликовал: @{username}"
+            f_date_in = date_in.strftime("%d-%m-%Y")
+            f_date_out = date_out.strftime("%d-%m-%Y")
+            user_info = f"🏠 Город: {city}\n🛌 Тип: {type}\n📬 Адрес: {address}\n" \
+                        f"📅 Свободные даты: \n{f_date_in} — {f_date_out}\n\n\n{description}\n\nОпубликовал: @{username}"
             user_photos = [photo for photo in photos if photo is not None]
             sublet = (user_info, user_photos)
             sublets.append(sublet)

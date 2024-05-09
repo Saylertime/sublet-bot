@@ -8,7 +8,6 @@ import time
 import threading
 from keyboards.reply.calendar import show_calendar
 from keyboards.reply.create_markup import create_markup
-from telebot.types import InputMediaPhoto
 
 
 @bot.message_handler(commands=['add_post'])
@@ -21,7 +20,12 @@ def add_post(message):
     buttons = [('Тель-Авив и окрестности', 'Тель-Авив',),
                ('Хайфа', 'Хайфа')]
     markup = create_markup(buttons)
-    bot.send_message(message.from_user.id, "Выберите город: ", reply_markup=markup)
+    try:
+        lol = message.message.message_id
+        bot.edit_message_text("Выберите город: ",
+                              message.message.chat.id, message.message.message_id, reply_markup=markup)
+    except:
+        bot.send_message(message.from_user.id, "Выберите город: ", reply_markup=markup)
 
 
 @bot.message_handler(state=OverallState.type)
@@ -31,7 +35,12 @@ def type_of_sublet(message):
     buttons = [('Квартира', 'Тип Квартира',),
                ('Комната', 'Тип Комната')]
     markup = create_markup(buttons)
-    bot.send_message(message.from_user.id, "Выберите тип саблета: ", reply_markup=markup)
+    try:
+        lol = message.message.message_id
+        bot.edit_message_text("Выберите тип саблета: ",
+                              message.message.chat.id, message.message.message_id, reply_markup=markup)
+    except:
+        bot.send_message(message.from_user.id, "Выберите тип саблета: ", reply_markup=markup)
 
 
 # КНОПОЧКИ
