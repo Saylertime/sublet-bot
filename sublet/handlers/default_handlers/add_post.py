@@ -147,3 +147,4 @@ def handle_text_messages(message):
         bot.reply_to(message, "Пожалуйста, отправьте фотографии.")
     elif message.content_type == 'document':
         bot.reply_to(message, "Пожалуйста, отправьте фотографии, а не документы.")
+
