@@ -4,6 +4,7 @@ from pg_maker import (
     find_my_sublets,
     change_post,
     type_of_sublet,
+    delete_post,
     status_of_sublet,
     update_photos,
     get_user_info_and_photos )
@@ -45,6 +46,7 @@ def choose_edit_button(message):
                ('Изменить фотографии', 'Изменить фотографии'),
                ('Изменить даты', 'Изменить даты'),
                ('Посмотреть пост', 'Изменить посмотреть пост'),
+               ('Удалить пост', 'Изменить удалить'),
                ('⬇ Назад к моим объявлениям ⬇', 'Посмотреть объявления'),
                ('⬇⬇⬇ Назад в меню ⬇⬇⬇', 'Назад в меню')]
     markup = create_markup(buttons)
@@ -102,7 +104,6 @@ def edit_address(message):
 
 def change_description(message):
     bot.edit_message_text('Введите новое описание', message.message.chat.id, message.message.message_id)
-    # bot.send_message(message.from_user.id, 'Введите новое описание')
     bot.set_state(message.from_user.id, state=OverallState.edit_description)
 
 @bot.message_handler(state=OverallState.edit_description)
@@ -159,6 +160,9 @@ def handle_text_messages(message):
         bot.reply_to(message, "Пожалуйста, отправьте фотографии, а не документы.")
 
 
+# def delete_sublet(message):
+#
+
 def see_post(message):
     media = []
     with bot.retrieve_data(message.from_user.id) as data:
@@ -213,6 +217,9 @@ def choose_buttons_callback(call):
         change_status(call)
     elif call.data == 'Изменить фотографии':
         change_photos(call)
+    elif call.data == 'Изменить удалить':
+        delete_post(post_id)
+        choose_edit_button(call)
     elif call.data == 'Изменить даты':
         with bot.retrieve_data(call.from_user.id) as data:
             data['command'] = 'edit_post'

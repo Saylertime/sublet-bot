@@ -81,6 +81,14 @@ def new_post(username, city, address, type, date_in, date_out, description, **ph
     close_db_connection(conn, cursor)
 
 
+def delete_post(post_id):
+    conn, cursor = connect_to_db()
+
+    sql = """DELETE FROM public.sublets WHERE id = %s;"""
+
+    cursor.execute(sql, (post_id,))
+    close_db_connection(conn, cursor)
+
 def find_my_sublets(username):
     conn, cursor = connect_to_db()
 
