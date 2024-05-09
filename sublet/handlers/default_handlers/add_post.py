@@ -67,7 +67,12 @@ def type_of_sublet_callback(call):
 
 @bot.message_handler(state=OverallState.address)
 def address(message):
-    bot.send_message(message.from_user.id, 'Напишите адрес')
+    try:
+        lol = message.message.message_id
+        bot.edit_message_text("Напишите адрес: ",
+                              message.message.chat.id, message.message.message_id)
+    except:
+        bot.send_message(message.from_user.id, 'Напишите адрес: ')
     bot.set_state(message.from_user.id, OverallState.description)
 
 
