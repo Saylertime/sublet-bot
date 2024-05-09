@@ -218,8 +218,12 @@ def choose_buttons_callback(call):
     elif call.data == 'Изменить фотографии':
         change_photos(call)
     elif call.data == 'Изменить удалить':
-        delete_post(post_id)
-        choose_edit_button(call)
+        try:
+            delete_post(post_id)
+            bot.send_message(call.from_user.id, 'Пост удален!')
+            edit_post(call)
+        except:
+            bot.send_message(call.from_user.id, 'Что-то пошло не так. Возможно, пост уже удален?')
     elif call.data == 'Изменить даты':
         with bot.retrieve_data(call.from_user.id) as data:
             data['command'] = 'edit_post'
