@@ -64,11 +64,16 @@ def create_users():
 def add_user(username):
     conn, cursor = connect_to_db()
     create_users()
-    sql = """INSERT INTO public.users 
-(username)
-VALUES (%s);
-    """
-    cursor.execute(sql, (username,))
+    cursor.execute('''SELECT * FROM public.users WHERE username = ?''', (username,))
+    existing_user = cursor.fetchone()
+    if existing_user:
+        return
+    else:
+        sql = """INSERT INTO public.users 
+    (username)
+    VALUES (%s);
+        """
+        cursor.execute(sql, (username,))
     close_db_connection(conn, cursor)
 
 def all_users_from_db():
