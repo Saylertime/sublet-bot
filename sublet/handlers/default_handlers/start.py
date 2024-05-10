@@ -4,12 +4,12 @@ from utils.logger import logger
 from handlers.default_handlers.add_post import add_post
 from handlers.default_handlers.edit_post import edit_post
 from handlers.default_handlers.free import free
-from pg_maker import create_users
+from pg_maker import add_user
 
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    create_users()
+    add_user()
     bot.delete_state(message.from_user.id)
     logger.warning(f'{message.from_user.username} — команда START')
     buttons = [('🔎 Найти саблет 🔎', 'Найти'),
