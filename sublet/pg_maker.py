@@ -49,9 +49,30 @@ def new_table():
     close_db_connection(conn, cursor)
 
 
+def create_users():
+    conn, cursor = connect_to_db()
+
+    sql = """CREATE TABLE IF NOT EXISTS public.sublets 
+    (
+    username VARCHAR,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """
+    cursor.execute(sql)
+    close_db_connection(conn, cursor)
+
+def all_users_from_db():
+    conn, cursor = connect_to_db()
+    cursor.execute('''SELECT username FROM users''')
+    all = cursor.fetchall()
+    all_users = [i[0] for i in all]
+    close_db_connection(conn, cursor)
+    return all_users
+
 def delete_table():
     conn, cursor = connect_to_db()
     cursor.execute("""DROP TABLE public.sublets;""")
+    new_table()
     close_db_connection(conn, cursor)
 
 
@@ -203,7 +224,7 @@ def get_user_info_and_photos(post_id):
         f_date_in = date_in.strftime("%d-%m-%Y")
         f_date_out = date_out.strftime("%d-%m-%Y")
         user_info = f"🏠 Город: {city}\n🛌 Тип: {type}\n📬 Адрес: {address}\n" \
-                    f"📅 Свободные даты: \n{f_date_in} — {f_date_out}\n\n\n{description}\n\nОпубликовал: @{username}"
+                    f"📅 Свободные даты: \n{f_date_in} — {f_date_out}\n\n{description}\n\nОпубликовал: @{username}"
         user_photos = [photo for photo in photos if photo is not None]
     else:
         user_info = "Информация о пользователе не найдена"
@@ -231,7 +252,7 @@ def get_active_sublets(city, date):
             f_date_in = date_in.strftime("%d-%m-%Y")
             f_date_out = date_out.strftime("%d-%m-%Y")
             user_info = f"🏠 Город: {city}\n🛌 Тип: {type}\n📬 Адрес: {address}\n" \
-                        f"📅 Свободные даты: \n{f_date_in} — {f_date_out}\n\n\n{description}\n\nОпубликовал: @{username}"
+                        f"📅 Свободные даты: \n{f_date_in} — {f_date_out}\n\n{description}\n\nОпубликовал: @{username}"
             user_photos = [photo for photo in photos if photo is not None]
             sublet = (user_info, user_photos)
             sublets.append(sublet)

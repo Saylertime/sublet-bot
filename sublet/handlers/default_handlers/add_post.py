@@ -130,6 +130,7 @@ def final(message):
                  **photo_variables)
 
     bot.delete_state(message.from_user.id)
+    bot.send_message('68086662', f'Новый пост от {message.from_user.username}')
 
     buttons = [('Посмотреть или отредактировать мои объявления', 'Отредактировать'),
                ('⬇⬇⬇ Назад в меню ⬇⬇⬇', 'Назад в меню')]
@@ -147,4 +148,3 @@ def handle_text_messages(message):
         bot.reply_to(message, "Пожалуйста, отправьте фотографии.")
     elif message.content_type == 'document':
         bot.reply_to(message, "Пожалуйста, отправьте фотографии, а не документы.")
-

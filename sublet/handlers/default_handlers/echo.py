@@ -1,16 +1,20 @@
 from telebot.types import Message
 from loader import bot
 from utils.logger import logger
-from pg_maker import delete_table
+from pg_maker import delete_table, all_users_from_db
 
 @bot.message_handler(state=None)
 def bot_echo(message: Message) -> None:
     """ Вызывается, когда пользователь без состояния вводит несуществующую команду """
+    all_users = all_users_from_db()
 
     if "ОБНОВИТЬ" in message.text:
         delete_table()
         bot.send_message(message.from_user.id, 'БД снесена')
 
+    elif message.text == 'ВСЕ':
+        all = ", ".join([i for i in all_users])
+        bot.send_message(message.from_user.id, all)
 
     else:
         logger.warning(f'{message.from_user.username} — ECHO — {message.text}')
