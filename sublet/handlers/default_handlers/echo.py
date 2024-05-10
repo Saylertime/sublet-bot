@@ -13,8 +13,11 @@ def bot_echo(message: Message) -> None:
         bot.send_message(message.from_user.id, 'БД снесена')
 
     elif message.text == 'ВСЕ':
-        all = ", ".join([i for i in all_users])
-        bot.send_message(message.from_user.id, all)
+        try:
+            all_us = ", ".join([i for i in all_users])
+            bot.send_message(message.from_user.id, all_us)
+        except:
+            bot.send_message(message.from_user.id, 'Что-то не так')
 
     else:
         logger.warning(f'{message.from_user.username} — ECHO — {message.text}')

@@ -65,7 +65,7 @@ def add_user(username):
     conn, cursor = connect_to_db()
     create_users()
     sql = """INSERT INTO public.users 
-    (username),
+    username,
     VALUES (%s);
     """
     cursor.execute(sql, (username,))
@@ -74,10 +74,11 @@ def add_user(username):
 def all_users_from_db():
     conn, cursor = connect_to_db()
     cursor.execute('''SELECT username FROM public.users''')
-    all = cursor.fetchall()
-    all_users = [i[0] for i in all]
+    all_us = cursor.fetchall()
+    all_users = [i[0] for i in all_us]
     close_db_connection(conn, cursor)
     return all_users
+
 
 def delete_table():
     conn, cursor = connect_to_db()
