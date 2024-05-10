@@ -64,7 +64,7 @@ def create_users():
 def add_user(username):
     conn, cursor = connect_to_db()
     create_users()
-    cursor.execute('''SELECT * FROM public.users WHERE username = ?''', (username,))
+    cursor.execute('''SELECT * FROM public.users WHERE username = %s''', (username,))
     existing_user = cursor.fetchone()
     if existing_user:
         return
