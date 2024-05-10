@@ -75,7 +75,7 @@ def all_users_from_db():
     conn, cursor = connect_to_db()
     cursor.execute('''SELECT username FROM public.users''')
     all_us = cursor.fetchall()
-    all_users = [i[0] for i in all_us]
+    all_users = [i for i in all_us]
     close_db_connection(conn, cursor)
     return all_users
 
