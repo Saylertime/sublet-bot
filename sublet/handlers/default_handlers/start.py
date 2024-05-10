@@ -9,7 +9,7 @@ from pg_maker import add_user
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    add_user()
+    add_user(message.from_user.username)
     bot.delete_state(message.from_user.id)
     logger.warning(f'{message.from_user.username} — команда START')
     buttons = [('🔎 Найти саблет 🔎', 'Найти'),
