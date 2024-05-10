@@ -65,8 +65,8 @@ def add_user(username):
     conn, cursor = connect_to_db()
     create_users()
     sql = """INSERT INTO public.users 
-    username
-    VALUES (%s);
+(username)
+VALUES (%s);
     """
     cursor.execute(sql, (username,))
     close_db_connection(conn, cursor)
