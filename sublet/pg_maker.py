@@ -52,7 +52,7 @@ def new_table():
 def create_users():
     conn, cursor = connect_to_db()
 
-    sql = """CREATE TABLE IF NOT EXISTS public.sublets 
+    sql = """CREATE TABLE IF NOT EXISTS public.users 
     (
     username VARCHAR,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -63,7 +63,7 @@ def create_users():
 
 def all_users_from_db():
     conn, cursor = connect_to_db()
-    cursor.execute('''SELECT username FROM users''')
+    cursor.execute('''SELECT username FROM public.users''')
     all = cursor.fetchall()
     all_users = [i[0] for i in all]
     close_db_connection(conn, cursor)
