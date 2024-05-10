@@ -14,7 +14,7 @@ def bot_echo(message: Message) -> None:
 
     elif message.text == 'ВСЕ':
         try:
-            all_us = ", ".join([i for i in all_users])
+            all_us = ", ".join([str(i[0]) for i in all_users])
             bot.send_message(message.from_user.id, all_us)
         except Exception as e:
             bot.send_message(message.from_user.id, str(e))
