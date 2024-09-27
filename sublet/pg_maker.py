@@ -250,15 +250,66 @@ def get_user_info_and_photos(post_id):
     return user_info, user_photos
 
 
-def get_active_sublets(city, date):
+def get_active_sublets(flag='', city='', date='', year='', month='', offset=0, limit=5):
     conn, cursor = connect_to_db()
 
-    sql = """SELECT username, city, date_in, date_out, type, address, description, 
-            photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8 
-             FROM public.sublets 
-             WHERE city = %s AND %s >= date_in AND %s < date_out AND is_active = True"""
+    if flag == 'by_date':
+        sql = """
+                SELECT username, city, date_in, date_out, type, address, description, 
+                photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8 
+                 FROM public.sublets 
+                 WHERE city = %s AND %s >= date_in AND %s < date_out AND is_active = True
+                 LIMIT %s OFFSET %s
+            """
+        cursor.execute(sql, (city, date, date, limit, offset))
 
-    cursor.execute(sql, (city, date, date))
+    elif flag == 'by_month':
+        sql = f"""
+                SELECT username, city, date_in, date_out, type, address, description, 
+                photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8 
+                FROM public.sublets 
+                WHERE (
+                    (date_in >= DATE '{year}-{month:02d}-01' AND date_in < DATE '{year}-{month:02d}-01' + INTERVAL '1 month')
+                    OR
+                    (date_out >= DATE '{year}-{month:02d}-01' AND date_out < DATE '{year}-{month:02d}-01' + INTERVAL '1 month')
+                    OR
+                    (date_in < DATE '{year}-{month:02d}-01' + INTERVAL '1 month' AND date_out > DATE '{year}-{month:02d}-01')
+                )
+                AND city = %s AND is_active = True
+                LIMIT %s OFFSET %s;
+            """
+        cursor.execute(sql, (city, limit, offset))
+
+    elif flag == 'by_active':
+        sql = f"""
+                SELECT username, city, date_in, date_out, type, address, description, 
+                photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8 
+                FROM public.sublets 
+                WHERE city = %s AND is_active = True AND date_out > CURRENT_DATE
+                LIMIT %s OFFSET %s
+            """
+        cursor.execute(sql, (city, limit, offset))
+
+    elif flag == 'all_posts':
+        sql = f"""
+                SELECT username, city, date_in, date_out, type, address, description, 
+                photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8 
+                FROM public.sublets
+                WHERE date_out > CURRENT_DATE
+                LIMIT %s OFFSET %s
+            """
+        cursor.execute(sql, (limit, offset))
+
+    elif flag == 'last_post':
+        sql = """
+                 SELECT username, city, date_in, date_out, type, address, description, 
+                       photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8 
+                FROM public.sublets 
+                ORDER BY created_at DESC 
+                LIMIT 1;
+            """
+        cursor.execute(sql)
+
     all_info_and_photos = cursor.fetchall()
 
     sublets = []
@@ -274,6 +325,3 @@ def get_active_sublets(city, date):
             sublets.append(sublet)
 
     return sublets
-
-
-

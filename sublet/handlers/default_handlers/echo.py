@@ -1,7 +1,9 @@
 from telebot.types import Message
 from loader import bot
 from utils.logger import logger
-from pg_maker import delete_table, all_users_from_db
+from pg_maker import delete_table, all_users_from_db, get_active_sublets
+from telebot.types import InputMediaPhoto
+
 
 @bot.message_handler(state=None)
 def bot_echo(message: Message) -> None:
@@ -11,6 +13,20 @@ def bot_echo(message: Message) -> None:
     if "ОБНОВИТЬ" in message.text:
         delete_table()
         bot.send_message(message.from_user.id, 'БД снесена')
+
+    elif 'LOL' in message.text:
+        result = get_active_sublets(flag='last_post')
+        for user_info, user_photos in result:
+            media = []
+            if user_photos:
+                media.append(InputMediaPhoto(open(user_photos[0], 'rb').read(), caption=user_info))
+                for photo_path in user_photos[1:]:
+                    with open(photo_path, 'rb') as photo_file:
+                        media.append(InputMediaPhoto(photo_file.read()))
+            else:
+                bot.send_message(message.from_user.id, "Фотографии не найдены")
+                return
+            bot.send_media_group(message.from_user.id, media)
 
     elif message.text == 'ВСЕ':
         try:

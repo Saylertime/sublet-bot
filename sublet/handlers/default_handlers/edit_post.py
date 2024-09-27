@@ -25,7 +25,6 @@ def edit_post(message):
         buttons.append(('⬇⬇⬇ Назад в меню ⬇⬇⬇', 'Назад в меню'))
         markup = create_markup(buttons)
         try:
-            lol = message.message.message_id
             bot.edit_message_text("Какое объявление нужно отредактировать?",
                              message.message.chat.id, message.message.message_id, reply_markup=markup)
         except:

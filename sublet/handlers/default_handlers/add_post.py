@@ -1,13 +1,14 @@
 from loader import bot
 from states.overall import OverallState
 from utils.logger import logger
-from pg_maker import new_post
+from pg_maker import new_post, get_active_sublets
 from handlers.default_handlers.free import show_variants
 import os
 import time
 import threading
 from keyboards.reply.calendar import show_calendar
 from keyboards.reply.create_markup import create_markup
+from telebot.types import InputMediaPhoto
 
 
 @bot.message_handler(commands=['add_post'])
@@ -49,13 +50,14 @@ def city_callback(call):
     with bot.retrieve_data(call.from_user.id) as data:
         data['city'] = call.data
         command = data['command']
+
     if command == 'add_post':
         bot.set_state(call.from_user.id, OverallState.type)
         type_of_sublet(call)
+
     elif command == 'free':
         bot.set_state(call.from_user.id, state=OverallState.free_show)
         show_variants(call)
-
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('Тип'))
@@ -131,6 +133,9 @@ def final(message):
 
     bot.delete_state(message.from_user.id)
     bot.send_message('68086662', f'Новый пост от {message.from_user.username}')
+    result = get_active_sublets(flag='last_post')
+    send_new_post_to_leha(result=result, user_id='68086662')
+
 
     buttons = [('Посмотреть или отредактировать мои объявления', 'Отредактировать'),
                ('⬇⬇⬇ Назад в меню ⬇⬇⬇', 'Назад в меню')]
@@ -148,3 +153,21 @@ def handle_text_messages(message):
         bot.reply_to(message, "Пожалуйста, отправьте фотографии.")
     elif message.content_type == 'document':
         bot.reply_to(message, "Пожалуйста, отправьте фотографии, а не документы.")
+
+
+def send_new_post_to_leha(result, user_id):
+    try:
+        for user_info, user_photos in result:
+            media = []
+            if user_photos:
+                media.append(InputMediaPhoto(open(user_photos[0], 'rb').read(), caption=user_info))
+                for photo_path in user_photos[1:]:
+                    with open(photo_path, 'rb') as photo_file:
+                        media.append(InputMediaPhoto(photo_file.read()))
+            else:
+                bot.send_message(user_id, "Фотографии не найдены")
+                return
+            bot.send_media_group(user_id, media)
+    except Exception as e:
+        bot.send_message(user_id, str(e))
+
