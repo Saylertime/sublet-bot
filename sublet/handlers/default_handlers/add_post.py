@@ -15,9 +15,20 @@ from telebot.types import InputMediaPhoto
 def add_post(message):
     bot.delete_state(message.from_user.id)
     logger.warning(f'{message.from_user.username} — команда ADD_POST')
+
     bot.set_state(message.from_user.id, state=OverallState.add_post)
+    if message.from_user.username is None:
+        bot.send_message(message.from_user.id, 'Пожалуйста, введите свой контакт или номер телефона. '
+                                               'Эта информация будет указана в объявлении')
+    else:
+        start_post(message)
+
+@bot.message_handler(state=OverallState.add_post)
+def start_post(message):
     with bot.retrieve_data(message.from_user.id) as data:
         data['command'] = 'add_post'
+        if message.from_user.username is None:
+            data['contact'] = message.text
     buttons = [('Тель-Авив и окрестности', 'Тель-Авив',),
                ('Хайфа', 'Хайфа')]
     markup = create_markup(buttons)
@@ -122,7 +133,10 @@ def final(message):
         for i, photo_path in enumerate(data['photos'][:8]):
             photo_variables[f'photo{i + 1}'] = photo_path
 
-        new_post(username=message.from_user.username,
+        contact = message.from_user.username or data['contact']
+
+        new_post(username=contact,
+                 user_id=str(message.from_user.id),
                  city=data['city'],
                  address=data['address'],
                  type=data['type'],

@@ -26,7 +26,8 @@ def new_table():
     sql = """CREATE TABLE IF NOT EXISTS public.sublets 
     (
     id SERIAL PRIMARY KEY,
-    username VARCHAR, 
+    username VARCHAR,
+    user_id VARCHAR,
     city VARCHAR, 
     address VARCHAR, 
     type VARCHAR, 
@@ -55,25 +56,26 @@ def create_users():
     sql = """CREATE TABLE IF NOT EXISTS public.users 
     (
     username VARCHAR,
+    user_id VARCHAR,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     """
     cursor.execute(sql)
     close_db_connection(conn, cursor)
 
-def add_user(username):
+def add_user(username, user_id):
     conn, cursor = connect_to_db()
     create_users()
-    cursor.execute('''SELECT * FROM public.users WHERE username = %s''', (username,))
+    cursor.execute('''SELECT * FROM public.users WHERE user_id = %s''', (user_id, ))
     existing_user = cursor.fetchone()
     if existing_user:
         return
     else:
         sql = """INSERT INTO public.users 
-    (username)
-    VALUES (%s);
+    (username, user_id)
+    VALUES (%s, %s);
         """
-        cursor.execute(sql, (username,))
+        cursor.execute(sql, (username, user_id,))
     close_db_connection(conn, cursor)
 
 def all_users_from_db():
@@ -89,10 +91,12 @@ def delete_table():
     conn, cursor = connect_to_db()
     cursor.execute("""DROP TABLE public.sublets;""")
     new_table()
+    cursor.execute("""DROP TABLE public.users;""")
+    create_users()
     close_db_connection(conn, cursor)
 
 
-def new_post(username, city, address, type, date_in, date_out, description, **photos):
+def new_post(username, user_id, city, address, type, date_in, date_out, description, **photos):
     conn, cursor = connect_to_db()
     new_table()
 
@@ -104,6 +108,7 @@ def new_post(username, city, address, type, date_in, date_out, description, **ph
     sql = """INSERT INTO public.sublets 
     (
     username, 
+    user_id, 
     city, 
     address,
     type,
@@ -112,9 +117,9 @@ def new_post(username, city, address, type, date_in, date_out, description, **ph
     date_out,
     photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8
     )
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
-    cursor.execute(sql, (username, city, address, type, description, date_in, date_out, *photo_values))
+    cursor.execute(sql, (username, user_id, city, address, type, description, date_in, date_out, *photo_values))
     close_db_connection(conn, cursor)
 
 
@@ -126,14 +131,14 @@ def delete_post(post_id):
     cursor.execute(sql, (post_id,))
     close_db_connection(conn, cursor)
 
-def find_my_sublets(username):
+def find_my_sublets(user_id):
     conn, cursor = connect_to_db()
 
     sql = """SELECT address, id 
              FROM public.sublets 
-             WHERE username = %s"""
+             WHERE user_id = %s"""
 
-    cursor.execute(sql, (username,))
+    cursor.execute(sql, (user_id, ))
     result = cursor.fetchall()
 
     close_db_connection(conn, cursor)

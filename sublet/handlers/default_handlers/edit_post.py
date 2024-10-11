@@ -20,7 +20,7 @@ import threading
 @bot.message_handler(commands=['edit_post'])
 def edit_post(message):
     bot.delete_state(message.from_user.id)
-    buttons = find_my_sublets(message.from_user.username)
+    buttons = find_my_sublets(str(message.from_user.id))
     if buttons:
         buttons.append(('⬇⬇⬇ Назад в меню ⬇⬇⬇', 'Назад в меню'))
         markup = create_markup(buttons)
