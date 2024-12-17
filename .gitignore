@@ -1,4 +1,18 @@
-.env
+# Ignore all .env files
+**/*.env
 
-media/
-postgres-data/
+# Ignore all directories named postgres-data
+**/postgres-data/
+
+# Ignore all .json files
+**/*.json
+
+.idea/
+
+**/*.log
+
+venv/
+
+**/venv/
+
+**/__pycache__/
