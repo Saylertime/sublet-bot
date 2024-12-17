@@ -1,0 +1,637 @@
+04-29 13:10 - saylertime — команда ADD_POST
+04-29 13:10 - saylertime — команда ADD_POST
+04-29 13:12 - saylertime — команда ADD_POST
+04-29 13:14 - saylertime — команда ADD_POST
+04-29 13:14 - saylertime — команда ADD_POST
+04-29 13:14 - saylertime — команда ADD_POST
+04-29 13:15 - saylertime — команда START
+04-29 13:15 - saylertime — команда ADD_POST
+04-29 13:16 - saylertime — команда ADD_POST
+04-29 13:48 - saylertime — команда ADD_POST
+04-29 13:50 - saylertime — команда ADD_POST
+04-29 13:50 - saylertime — команда START
+04-29 13:50 - saylertime — команда ADD_POST
+04-29 13:51 - saylertime — команда ADD_POST
+04-29 13:52 - saylertime — команда ADD_POST
+04-29 13:52 - saylertime — команда ADD_POST
+04-29 13:55 - saylertime — команда START
+04-29 13:55 - saylertime — команда ADD_POST
+04-29 13:56 - saylertime — команда ADD_POST
+04-29 13:57 - saylertime — команда ADD_POST
+04-29 13:58 - saylertime — команда ADD_POST
+04-29 13:59 - saylertime — команда ADD_POST
+04-29 14:00 - saylertime — команда ADD_POST
+04-29 14:06 - saylertime — команда ADD_POST
+04-29 18:16 - saylertime — команда ADD_POST
+04-29 18:16 - saylertime — ECHO — 44
+04-29 18:16 - saylertime — команда ADD_POST
+04-29 18:17 - saylertime — команда ADD_POST
+04-29 18:18 - saylertime — команда ADD_POST
+04-29 18:18 - saylertime — команда ADD_POST
+04-29 18:19 - saylertime — команда ADD_POST
+04-29 18:20 - saylertime — команда ADD_POST
+04-29 18:20 - saylertime — команда ADD_POST
+04-29 18:20 - saylertime — команда ADD_POST
+04-29 18:21 - saylertime — команда ADD_POST
+04-29 18:21 - saylertime — команда ADD_POST
+04-29 18:22 - saylertime — команда ADD_POST
+04-29 18:23 - saylertime — команда ADD_POST
+04-29 18:24 - saylertime — команда ADD_POST
+04-29 18:25 - saylertime — команда ADD_POST
+04-29 18:25 - saylertime — команда ADD_POST
+04-29 18:26 - saylertime — команда ADD_POST
+04-29 18:27 - saylertime — команда ADD_POST
+04-29 18:28 - saylertime — команда ADD_POST
+04-29 18:34 - saylertime — команда ADD_POST
+04-29 18:34 - saylertime — команда ADD_POST
+04-29 18:35 - saylertime — команда ADD_POST
+04-29 18:35 - saylertime — команда ADD_POST
+04-29 18:36 - saylertime — команда ADD_POST
+04-29 18:36 - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: strings must be encoded in UTF-8
+04-29 18:36 - Exception traceback:
+Traceback (most recent call last):
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 1141, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/util.py", line 149, in raise_exceptions
+    raise self.exception_info
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/util.py", line 92, in run
+    task(*args, **kwargs)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 7868, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/handlers/default_handlers/add_post.py", line 57, in photos
+    bot.reply_to(message, photos)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 5266, in reply_to
+    return self.send_message(message.chat.id, text, reply_parameters=reply_parameters, **kwargs)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 1673, in send_message
+    apihelper.send_message(
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 264, in send_message
+    return _make_request(token, method_url, params=payload, method='post')
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 164, in _make_request
+    json_result = _check_result(method_name, result)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 191, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: strings must be encoded in UTF-8
+
+04-29 18:37 - saylertime — команда ADD_POST
+04-29 18:37 - Threaded polling exception: A request to the Telegram API was unsuccessful. The server returned HTTP 431 Request Header Fields Too Large. Response body:
+[b'']
+04-29 18:37 - Exception traceback:
+Traceback (most recent call last):
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/requests/models.py", line 971, in json
+    return complexjson.loads(self.text, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 183, in _check_result
+    result_json = result.json()
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/requests/models.py", line 975, in json
+    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 1141, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/util.py", line 149, in raise_exceptions
+    raise self.exception_info
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/util.py", line 92, in run
+    task(*args, **kwargs)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 7868, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/handlers/default_handlers/add_post.py", line 61, in photos
+    bot.reply_to(message, photos)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 5266, in reply_to
+    return self.send_message(message.chat.id, text, reply_parameters=reply_parameters, **kwargs)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 1673, in send_message
+    apihelper.send_message(
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 264, in send_message
+    return _make_request(token, method_url, params=payload, method='post')
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 164, in _make_request
+    json_result = _check_result(method_name, result)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 186, in _check_result
+    raise ApiHTTPException(method_name, result)
+telebot.apihelper.ApiHTTPException: A request to the Telegram API was unsuccessful. The server returned HTTP 431 Request Header Fields Too Large. Response body:
+[b'']
+
+04-29 18:38 - saylertime — команда ADD_POST
+04-29 18:38 - saylertime — команда ADD_POST
+04-29 18:38 - saylertime — команда ADD_POST
+04-29 18:39 - saylertime — команда ADD_POST
+04-29 18:40 - saylertime — команда ADD_POST
+04-29 18:41 - saylertime — команда ADD_POST
+04-29 18:42 - saylertime — команда ADD_POST
+04-29 18:42 - saylertime — команда ADD_POST
+04-29 18:43 - saylertime — команда START
+04-29 18:43 - saylertime — команда ADD_POST
+04-29 18:46 - saylertime — команда ADD_POST
+04-29 18:46 - saylertime — команда ADD_POST
+04-29 18:46 - saylertime — команда ADD_POST
+04-29 18:46 - saylertime — команда ADD_POST
+04-29 18:47 - saylertime — команда ADD_POST
+04-29 18:48 - saylertime — команда ADD_POST
+04-29 18:52 - saylertime — команда ADD_POST
+04-29 18:53 - saylertime — команда ADD_POST
+04-29 18:53 - saylertime — команда ADD_POST
+04-29 18:53 - saylertime — команда ADD_POST
+04-29 18:54 - saylertime — команда ADD_POST
+04-29 19:05 - saylertime — команда ADD_POST
+04-29 19:05 - saylertime — ECHO — да
+04-29 19:05 - saylertime — ECHO — нет
+04-29 19:06 - saylertime — команда ADD_POST
+04-29 19:06 - saylertime — ECHO — да
+04-29 19:06 - saylertime — ECHO — нет
+04-29 19:06 - saylertime — ECHO — да
+04-29 19:07 - saylertime — команда ADD_POST
+04-29 19:07 - saylertime — команда ADD_POST
+04-29 19:08 - saylertime — команда ADD_POST
+04-29 19:09 - saylertime — команда ADD_POST
+04-29 19:10 - saylertime — команда ADD_POST
+04-29 19:14 - saylertime — команда ADD_POST
+04-29 19:15 - saylertime — команда ADD_POST
+04-29 19:20 - saylertime — команда START
+04-29 19:20 - saylertime — ECHO — /free_sublets
+04-29 19:20 - saylertime — ECHO — /free_sublets
+04-29 19:21 - saylertime — ECHO — /free_sunlets
+04-29 19:21 - saylertime — ECHO — /free_sublets
+04-29 19:22 - saylertime — ECHO — /free_sublets
+04-29 19:22 - saylertime — команда START
+04-29 19:22 - saylertime — команда ADD_POST
+04-29 19:22 - saylertime — ECHO — /free_sunlets
+04-29 19:22 - saylertime — ECHO — /free_sublets
+04-29 19:23 - saylertime — ECHO — /free_sunlets
+04-29 19:23 - saylertime — команда START
+04-29 19:24 - saylertime — команда START
+04-29 19:24 - saylertime — ECHO — /free_sublets
+04-29 20:59 - saylertime — ECHO — /free_sublets
+04-29 20:59 - saylertime — команда ADD_POST
+04-29 21:00 - saylertime — ECHO — да
+04-29 21:00 - saylertime — ECHO — /free_sublets
+04-29 21:01 - saylertime — ECHO — /free
+04-29 21:05 - saylertime — команда ADD_POST
+04-29 21:05 - saylertime — команда ADD_POST
+04-29 21:07 - saylertime — команда ADD_POST
+04-29 21:07 - saylertime — ECHO — 24.04.2024
+04-29 21:07 - saylertime — команда START
+04-29 21:07 - saylertime — команда ADD_POST
+04-29 21:08 - saylertime — команда ADD_POST
+04-29 21:16 - saylertime — ECHO — d
+04-29 21:17 - saylertime — команда ADD_POST
+04-29 21:20 - saylertime — команда ADD_POST
+04-29 21:47 - saylertime — команда ADD_POST
+04-29 21:49 - saylertime — команда ADD_POST
+04-30 17:01 - saylertime — команда ADD_POST
+04-30 17:04 - saylertime — команда ADD_POST
+04-30 17:05 - saylertime — команда ADD_POST
+04-30 17:05 - saylertime — команда ADD_POST
+04-30 17:13 - saylertime — команда ADD_POST
+04-30 17:13 - saylertime — команда ADD_POST
+04-30 17:13 - saylertime — команда ADD_POST
+04-30 17:16 - saylertime — команда ADD_POST
+04-30 17:17 - saylertime — команда ADD_POST
+04-30 17:18 - saylertime — команда ADD_POST
+04-30 17:21 - saylertime — команда ADD_POST
+04-30 17:25 - saylertime — команда ADD_POST
+04-30 17:26 - saylertime — команда ADD_POST
+04-30 17:26 - saylertime — команда ADD_POST
+04-30 17:27 - saylertime — команда ADD_POST
+04-30 17:27 - saylertime — команда ADD_POST
+04-30 17:28 - saylertime — команда ADD_POST
+04-30 17:28 - saylertime — команда ADD_POST
+04-30 17:29 - saylertime — команда ADD_POST
+04-30 17:30 - saylertime — команда ADD_POST
+04-30 17:31 - saylertime — команда ADD_POST
+04-30 17:32 - saylertime — команда ADD_POST
+04-30 17:33 - saylertime — команда ADD_POST
+04-30 17:39 - saylertime — команда ADD_POST
+04-30 17:39 - saylertime — ECHO — дщд?
+04-30 17:39 - saylertime — команда ADD_POST
+04-30 17:41 - saylertime — команда ADD_POST
+04-30 17:42 - saylertime — команда ADD_POST
+04-30 17:42 - saylertime — команда ADD_POST
+04-30 17:43 - saylertime — команда ADD_POST
+04-30 17:43 - saylertime — команда ADD_POST
+04-30 17:44 - saylertime — команда ADD_POST
+04-30 17:46 - saylertime — команда ADD_POST
+04-30 17:46 - saylertime — команда ADD_POST
+04-30 17:46 - saylertime — команда ADD_POST
+04-30 17:48 - saylertime — команда ADD_POST
+04-30 17:48 - saylertime — команда ADD_POST
+04-30 17:49 - saylertime — команда ADD_POST
+04-30 17:50 - saylertime — команда ADD_POST
+04-30 19:02 - saylertime — команда ADD_POST
+04-30 19:03 - saylertime — команда ADD_POST
+04-30 19:04 - saylertime — команда ADD_POST
+04-30 19:04 - saylertime — команда ADD_POST
+04-30 19:05 - saylertime — команда ADD_POST
+04-30 20:59 - saylertime — команда ADD_POST
+04-30 21:00 - saylertime — команда ADD_POST
+04-30 21:01 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.219:5001
+04-30 21:01 - [33mPress CTRL+C to quit[0m
+04-30 21:01 -  * Restarting with stat
+04-30 21:01 -  * Debugger is active!
+04-30 21:01 -  * Debugger PIN: 181-415-984
+04-30 21:01 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.219:5001
+04-30 21:01 - [33mPress CTRL+C to quit[0m
+04-30 21:01 -  * Restarting with stat
+04-30 21:01 - saylertime — команда START
+04-30 21:01 - saylertime — команда ADD_POST
+04-30 21:02 -  * Debugger is active!
+04-30 21:02 -  * Debugger PIN: 181-415-984
+04-30 21:02 - 127.0.0.1 - - [30/Apr/2024 21:02:05] "[33mGET / HTTP/1.1[0m" 404 -
+04-30 21:02 - 127.0.0.1 - - [30/Apr/2024 21:02:05] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+04-30 21:02 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.219:5001
+04-30 21:02 - [33mPress CTRL+C to quit[0m
+04-30 21:02 -  * Restarting with stat
+04-30 21:02 -  * Debugger is active!
+04-30 21:02 -  * Debugger PIN: 181-415-984
+04-30 21:02 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.219:5001
+04-30 21:02 - [33mPress CTRL+C to quit[0m
+04-30 21:02 -  * Restarting with stat
+04-30 21:02 -  * Debugger is active!
+04-30 21:02 -  * Debugger PIN: 181-415-984
+04-30 21:02 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.219:5001
+04-30 21:02 - [33mPress CTRL+C to quit[0m
+04-30 21:02 -  * Restarting with stat
+04-30 21:02 -  * Debugger is active!
+04-30 21:02 -  * Debugger PIN: 181-415-984
+04-30 21:02 - saylertime — команда START
+04-30 21:05 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.219:5001
+04-30 21:05 - [33mPress CTRL+C to quit[0m
+04-30 21:06 - saylertime — команда START
+04-30 21:06 - saylertime — команда ADD_POST
+04-30 21:07 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.219:5001
+04-30 21:07 - [33mPress CTRL+C to quit[0m
+04-30 21:07 - saylertime — команда ADD_POST
+04-30 21:08 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.219:5001
+04-30 21:08 - [33mPress CTRL+C to quit[0m
+04-30 21:08 - saylertime — команда ADD_POST
+04-30 21:09 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.219:5001
+04-30 21:09 - [33mPress CTRL+C to quit[0m
+04-30 21:09 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.219:5001
+04-30 21:09 - [33mPress CTRL+C to quit[0m
+04-30 21:09 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.219:5001
+04-30 21:09 - [33mPress CTRL+C to quit[0m
+04-30 21:09 -  * Restarting with stat
+04-30 21:09 -  * Debugger is active!
+04-30 21:09 -  * Debugger is active!
+04-30 21:09 -  * Debugger PIN: 181-415-984
+04-30 21:09 -  * Debugger PIN: 181-415-984
+04-30 21:10 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5015
+ * Running on http://192.168.1.219:5015
+04-30 21:10 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.219:5001
+04-30 21:10 - [33mPress CTRL+C to quit[0m
+04-30 21:10 - [33mPress CTRL+C to quit[0m
+04-30 21:10 -  * Restarting with stat
+04-30 21:10 -  * Debugger is active!
+04-30 21:10 -  * Debugger is active!
+04-30 21:10 -  * Debugger PIN: 181-415-984
+04-30 21:10 -  * Debugger PIN: 181-415-984
+04-30 21:10 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.219:5003
+04-30 21:10 - [33mPress CTRL+C to quit[0m
+04-30 21:10 -  * Restarting with stat
+04-30 21:10 -  * Debugger is active!
+04-30 21:10 -  * Debugger PIN: 181-415-984
+04-30 21:10 - 127.0.0.1 - - [30/Apr/2024 21:10:34] "[33mGET / HTTP/1.1[0m" 404 -
+04-30 21:10 - 127.0.0.1 - - [30/Apr/2024 21:10:35] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+04-30 21:10 - 127.0.0.1 - - [30/Apr/2024 21:10:47] "[33mGET /media/lol.jpg HTTP/1.1[0m" 404 -
+04-30 21:11 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.219:5003
+04-30 21:11 - [33mPress CTRL+C to quit[0m
+04-30 21:11 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.219:5003
+04-30 21:11 - [33mPress CTRL+C to quit[0m
+04-30 21:12 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.219:5003
+04-30 21:12 - [33mPress CTRL+C to quit[0m
+04-30 21:12 - 127.0.0.1 - - [30/Apr/2024 21:12:55] "[33mGET /media/lol.jpg HTTP/1.1[0m" 404 -
+04-30 21:12 - 127.0.0.1 - - [30/Apr/2024 21:12:55] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+04-30 21:12 - 127.0.0.1 - - [30/Apr/2024 21:12:59] "[33mGET /media/lol.jpg HTTP/1.1[0m" 404 -
+04-30 21:12 - 127.0.0.1 - - [30/Apr/2024 21:12:59] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+04-30 21:13 - 127.0.0.1 - - [30/Apr/2024 21:13:22] "GET /media/photo_68086662_1714492951_21.jpg HTTP/1.1" 200 -
+04-30 21:13 - saylertime — команда ADD_POST
+04-30 21:14 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.219:5003
+04-30 21:14 - [33mPress CTRL+C to quit[0m
+04-30 21:14 - saylertime — команда ADD_POST
+04-30 21:15 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.219:5003
+04-30 21:15 - [33mPress CTRL+C to quit[0m
+04-30 21:15 - saylertime — команда ADD_POST
+04-30 21:17 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.219:5003
+04-30 21:17 - [33mPress CTRL+C to quit[0m
+04-30 21:18 - saylertime — команда ADD_POST
+04-30 21:22 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.219:5003
+04-30 21:22 - [33mPress CTRL+C to quit[0m
+04-30 21:22 - saylertime — команда START
+04-30 21:22 - saylertime — команда ADD_POST
+04-30 21:23 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.219:5003
+04-30 21:23 - [33mPress CTRL+C to quit[0m
+04-30 21:23 - saylertime — команда ADD_POST
+04-30 21:26 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5003
+ * Running on http://192.168.1.219:5003
+04-30 21:26 - [33mPress CTRL+C to quit[0m
+04-30 21:26 - saylertime — команда ADD_POST
+04-30 21:27 - saylertime — команда ADD_POST
+04-30 21:29 - saylertime — команда ADD_POST
+05-01 13:53 - saylertime — команда ADD_POST
+05-01 13:54 - saylertime — команда ADD_POST
+05-01 13:56 - saylertime — команда ADD_POST
+05-01 13:56 - saylertime — команда ADD_POST
+05-01 13:58 - saylertime — команда ADD_POST
+05-01 13:59 - saylertime — команда ADD_POST
+05-01 14:03 - saylertime — команда ADD_POST
+05-01 14:04 - saylertime — команда ADD_POST
+05-01 14:04 - saylertime — команда ADD_POST
+05-01 14:05 - saylertime — команда ADD_POST
+05-01 14:07 - saylertime — команда ADD_POST
+05-01 14:07 - saylertime — команда ADD_POST
+05-01 14:09 - saylertime — команда ADD_POST
+05-01 14:10 - saylertime — команда ADD_POST
+05-01 14:11 - saylertime — команда ADD_POST
+05-01 14:11 - saylertime — команда ADD_POST
+05-01 14:38 - saylertime — команда ADD_POST
+05-01 14:38 - saylertime — команда ADD_POST
+05-02 15:53 - saylertime — команда ADD_POST
+05-02 15:54 - saylertime — команда ADD_POST
+05-02 15:55 - saylertime — команда ADD_POST
+05-02 15:55 - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 403. Description: Forbidden: bots can't send messages to bots
+05-02 15:55 - Exception traceback:
+Traceback (most recent call last):
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 1141, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/util.py", line 149, in raise_exceptions
+    raise self.exception_info
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/util.py", line 92, in run
+    task(*args, **kwargs)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 7868, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/handlers/default_handlers/add_post.py", line 38, in callback_query
+    address(call.message)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/handlers/default_handlers/add_post.py", line 43, in address
+    bot.send_message(message.from_user.id, 'Опишите саблет')
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 1673, in send_message
+    apihelper.send_message(
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 264, in send_message
+    return _make_request(token, method_url, params=payload, method='post')
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 164, in _make_request
+    json_result = _check_result(method_name, result)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 191, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 403. Description: Forbidden: bots can't send messages to bots
+
+05-02 15:56 - saylertime — команда ADD_POST
+05-02 15:58 - saylertime — команда ADD_POST
+05-02 15:59 - saylertime — команда ADD_POST
+05-02 15:59 - saylertime — команда ADD_POST
+05-07 18:13 - saylertime — команда START
+05-07 18:13 - saylertime — команда FREE
+05-07 18:14 - saylertime — команда START
+05-07 18:14 - saylertime — команда FREE
+05-07 18:14 - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: unsupported parse_mode
+05-07 18:14 - Exception traceback:
+Traceback (most recent call last):
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 1141, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/util.py", line 149, in raise_exceptions
+    raise self.exception_info
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/util.py", line 92, in run
+    task(*args, **kwargs)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 7868, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/handlers/default_handlers/start.py", line 28, in callback_query_start
+    free(call)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/handlers/default_handlers/free.py", line 18, in free
+    show_calendar(bot, message.message.chat.id, message.message.message_id)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/keyboards/reply/calendar.py", line 13, in show_calendar
+    bot.send_message(f"Выберите дату", chat_id, message_id, reply_markup=calendar)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 1673, in send_message
+    apihelper.send_message(
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 264, in send_message
+    return _make_request(token, method_url, params=payload, method='post')
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 164, in _make_request
+    json_result = _check_result(method_name, result)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 191, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: unsupported parse_mode
+
+05-07 18:15 - saylertime — команда FREE
+05-07 18:15 - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: unsupported parse_mode
+05-07 18:15 - Exception traceback:
+Traceback (most recent call last):
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 1141, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/util.py", line 149, in raise_exceptions
+    raise self.exception_info
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/util.py", line 92, in run
+    task(*args, **kwargs)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 7868, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/handlers/default_handlers/start.py", line 28, in callback_query_start
+    free(call)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/handlers/default_handlers/free.py", line 18, in free
+    show_calendar(bot, message.from_user.id, message.message.message_id)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/keyboards/reply/calendar.py", line 13, in show_calendar
+    bot.send_message(f"Выберите дату", chat_id, message_id, reply_markup=calendar)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 1673, in send_message
+    apihelper.send_message(
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 264, in send_message
+    return _make_request(token, method_url, params=payload, method='post')
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 164, in _make_request
+    json_result = _check_result(method_name, result)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 191, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: unsupported parse_mode
+
+05-07 18:15 - saylertime — команда FREE
+05-07 18:15 - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: chat not found
+05-07 18:15 - Exception traceback:
+Traceback (most recent call last):
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 1141, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/util.py", line 149, in raise_exceptions
+    raise self.exception_info
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/util.py", line 92, in run
+    task(*args, **kwargs)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 7868, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/handlers/default_handlers/start.py", line 28, in callback_query_start
+    free(call)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/handlers/default_handlers/free.py", line 18, in free
+    bot.edit_message_text(message.message.chat.id, message.message.message_id, 'lol?')
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 4455, in edit_message_text
+    result = apihelper.edit_message_text(
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 1308, in edit_message_text
+    return _make_request(token, method_url, params=payload, method='post')
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 164, in _make_request
+    json_result = _check_result(method_name, result)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 191, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: chat not found
+
+05-07 18:16 - saylertime — команда START
+05-07 18:16 - saylertime — команда FREE
+05-07 18:17 - saylertime — команда FREE
+05-07 18:18 - saylertime — команда FREE
+05-07 18:18 - saylertime — команда FREE
+05-07 18:19 - saylertime — команда FREE
+05-07 18:19 - saylertime — команда START
+05-07 18:19 - saylertime — команда FREE
+05-07 18:19 - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: chat not found
+05-07 18:19 - Exception traceback:
+Traceback (most recent call last):
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 1141, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/util.py", line 149, in raise_exceptions
+    raise self.exception_info
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/util.py", line 92, in run
+    task(*args, **kwargs)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 7868, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/handlers/default_handlers/start.py", line 28, in callback_query_start
+    free(call)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/handlers/default_handlers/free.py", line 19, in free
+    show_calendar(bot, message.message.chat.id)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/keyboards/reply/calendar.py", line 13, in show_calendar
+    bot.send_message(f"Выберите дату", chat_id, message_id, reply_markup=calendar)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 1673, in send_message
+    apihelper.send_message(
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 264, in send_message
+    return _make_request(token, method_url, params=payload, method='post')
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 164, in _make_request
+    json_result = _check_result(method_name, result)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 191, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: chat not found
+
+05-07 18:21 - saylertime — команда START
+05-07 18:21 - saylertime — команда FREE
+05-07 18:22 - saylertime — команда ADD_POST
+05-07 18:22 - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message identifier is not specified
+05-07 18:22 - Exception traceback:
+Traceback (most recent call last):
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 1141, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/util.py", line 149, in raise_exceptions
+    raise self.exception_info
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/util.py", line 92, in run
+    task(*args, **kwargs)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 7868, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/handlers/default_handlers/add_post.py", line 77, in move_in
+    show_calendar(bot, message.from_user.id)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/keyboards/reply/calendar.py", line 14, in show_calendar
+    bot.edit_message_text(f"Выберите дату", chat_id, message_id, reply_markup=calendar)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 4455, in edit_message_text
+    result = apihelper.edit_message_text(
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 1308, in edit_message_text
+    return _make_request(token, method_url, params=payload, method='post')
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 164, in _make_request
+    json_result = _check_result(method_name, result)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 191, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: message identifier is not specified
+
+05-07 18:22 - saylertime — команда ADD_POST
+05-07 18:23 - Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: chat_id is empty
+05-07 18:23 - Exception traceback:
+Traceback (most recent call last):
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 1141, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/util.py", line 149, in raise_exceptions
+    raise self.exception_info
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/util.py", line 92, in run
+    task(*args, **kwargs)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 7868, in _run_middlewares_and_handler
+    result = handler['function'](message)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/handlers/default_handlers/add_post.py", line 77, in move_in
+    show_calendar(bot, message.from_user.id)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/keyboards/reply/calendar.py", line 17, in show_calendar
+    bot.send_message(chat_id,
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/__init__.py", line 1673, in send_message
+    apihelper.send_message(
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 264, in send_message
+    return _make_request(token, method_url, params=payload, method='post')
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 164, in _make_request
+    json_result = _check_result(method_name, result)
+  File "/Users/alexeyglinkin/Desktop/my_bots/sublet/venv/lib/python3.10/site-packages/telebot/apihelper.py", line 191, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: chat_id is empty
+
+05-07 18:23 - saylertime — команда ADD_POST
+05-07 18:23 - saylertime — команда START
+05-07 18:23 - saylertime — команда FREE
+05-07 18:24 - saylertime — команда START
+05-07 18:24 - saylertime — команда FREE
+05-07 18:24 - saylertime — команда START
+05-07 18:24 - saylertime — команда ADD_POST
