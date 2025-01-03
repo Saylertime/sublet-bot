@@ -100,7 +100,7 @@ def description(message):
 
 @bot.message_handler(state=OverallState.move_in)
 def move_in(message):
-    if len(message.text) < 3500:
+    if len(message.text) < 900:
         with bot.retrieve_data(message.from_user.id) as data:
             data['description'] = message.text
         show_calendar(bot, message.from_user.id)
