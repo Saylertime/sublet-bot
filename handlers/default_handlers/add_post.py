@@ -94,13 +94,13 @@ def description(message):
     with bot.retrieve_data(message.from_user.id) as data:
         data['address'] = message.text
     bot.send_message(message.from_user.id, 'Опишите саблет. Здесь можно оставить свои контакты и добавить эмодзи 🏠\n\n'
-                                           'ВНИМАНИЕ: максимальная длина сообщения — 3500 символов')
+                                           'ВНИМАНИЕ: максимальная длина сообщения — 400 символов')
     bot.set_state(message.from_user.id, OverallState.move_in)
 
 
 @bot.message_handler(state=OverallState.move_in)
 def move_in(message):
-    if len(message.text) < 900:
+    if len(message.text) < 500:
         with bot.retrieve_data(message.from_user.id) as data:
             data['description'] = message.text
         show_calendar(bot, message.from_user.id)
