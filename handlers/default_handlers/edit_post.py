@@ -181,8 +181,13 @@ def see_post(message):
                    ('⬇⬇⬇ Вернуться в меню ⬇⬇⬇', 'Назад в меню')]
         markup = create_markup(buttons)
         bot.send_message(message.from_user.id, 'Что дальше?', reply_markup=markup)
-    except:
+    except Exception as e:
         bot.send_message(message.from_user.id, "Загружены некорректные фото. Они должны быть в формате jpeg или png")
+        try:
+            bot.send_message('68086662', str(e))
+        except:
+            with open('error.txt', 'a') as file:
+                file.write(str(e) + "\n\n")
         return
 
 
