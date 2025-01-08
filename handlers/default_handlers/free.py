@@ -89,7 +89,7 @@ def send_sublets(result, message):
                     bot.send_media_group(message.from_user.id, media)
                 except Exception as e:
                     print(e)
-                    bot.send_message(message.from_user.id, "Не удалось отправить фотографии.")
+                    bot.send_message(message.from_user.id, f"Не удалось отправить фотографии.\n\n {user_info}")
                     continue
             else:
                 bot.send_message(message.from_user.id, "Фотографии не найдены.")
