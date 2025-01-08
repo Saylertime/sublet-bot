@@ -67,42 +67,70 @@ def send_sublets(result, message):
     if result:
         try:
             bot.delete_message(message.message.chat.id, message.message.message_id)
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
         for user_info, user_photos in result:
             media = []
             if user_photos:
-                media.append(InputMediaPhoto(open(user_photos[0], 'rb').read(), caption=user_info))
-                for photo_path in user_photos[1:]:
-                    with open(photo_path, 'rb') as photo_file:
-                        media.append(InputMediaPhoto(photo_file.read()))
-            else:
-                bot.send_message(message.from_user.id, "Фотографии не найдены")
-                return
-            try:
-                bot.delete_message(message.message.chat.id, message.message.message_id)
-            except:
-                pass
-            bot.send_media_group(message.from_user.id, media)
+                try:
+                    with open(user_photos[0], 'rb') as photo_file:
+                        media.append(types.InputMediaPhoto(photo_file.read(), caption=user_info))
 
-        with bot.retrieve_data(message.from_user.id) as data:
-            city = data.get('city', 'No city')
+                    for photo_path in user_photos[1:]:
+                        with open(photo_path, 'rb') as photo_file:
+                            media.append(types.InputMediaPhoto(photo_file.read()))
+                except Exception as e:
+                    print(e)
+                    bot.send_message(message.from_user.id, "Не удалось загрузить фотографии. Убедитесь, что они в формате JPEG или PNG.")
+                    continue
+
+                try:
+                    bot.send_media_group(message.from_user.id, media)
+                except Exception as e:
+                    print(e)
+                    bot.send_message(message.from_user.id, "Не удалось отправить фотографии.")
+                    continue
+            else:
+                bot.send_message(message.from_user.id, "Фотографии не найдены.")
+                return
+
+        try:
+            with bot.retrieve_data(message.from_user.id) as data:
+                city = data.get('city', 'No city')
+        except Exception as e:
+            print(e)
+            city = 'No city'
 
         if len(result) >= 5:
             markup = types.InlineKeyboardMarkup()
             markup.add(types.InlineKeyboardButton("Показать ещё", callback_data=f"load_more_{city}"))
-            bot.send_message(message.from_user.id, "Хотите увидеть больше?", reply_markup=markup)
-
+            try:
+                bot.send_message(message.from_user.id, "Хотите увидеть больше?", reply_markup=markup)
+            except Exception as e:
+                print(e)
     else:
         buttons = [('⬇⬇⬇ Назад в меню ⬇⬇⬇', 'Назад в меню')]
         markup = create_markup(buttons)
+
         try:
-            bot.edit_message_text('В эту дату пока нет ничего доступного',
-                                  message.message.chat.id, message.message.message_id, reply_markup=markup)
-        except:
-            bot.send_message(message.from_user.id, 'В эту дату пока нет ничего доступного', reply_markup=markup)
-        bot.delete_state(message.from_user.id)
+            bot.edit_message_text(
+                "В эту дату пока нет ничего доступного",
+                message.message.chat.id,
+                message.message.message_id,
+                reply_markup=markup
+            )
+        except Exception as e:
+            print(e)
+            try:
+                bot.send_message(message.from_user.id, "В эту дату пока нет ничего доступного.", reply_markup=markup)
+            except Exception as e:
+                print(e)
+
+        try:
+            bot.delete_state(message.from_user.id)
+        except Exception as e:
+            print(e)
 
 
 @bot.callback_query_handler(func=lambda call: call.data in ['Месяц', 'Дата', 'В городе', 'Все сразу'])

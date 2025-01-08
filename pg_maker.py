@@ -300,7 +300,7 @@ def get_active_sublets(flag='', city='', date='', year='', month='', offset=0, l
                 SELECT username, city, date_in, date_out, type, address, description, 
                 photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8 
                 FROM public.sublets
-                WHERE date_out > CURRENT_DATE
+                WHERE date_out > CURRENT_DATE AND is_active = True
                 LIMIT %s OFFSET %s
             """
         cursor.execute(sql, (limit, offset))
