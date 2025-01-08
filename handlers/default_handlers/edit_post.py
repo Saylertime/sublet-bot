@@ -186,8 +186,10 @@ def see_post(message):
         for photo_path in user_photos[1:]:
             with open(photo_path, 'rb') as photo_file:
                 media.append(InputMediaPhoto(photo_file.read()))
-        bot.send_media_group(message.from_user.id, media)
-        # bot.send_message(message.from_user.id, "Загружены некорректные фото. Они должны быть в формате jpeg или png")
+        try:
+            bot.send_media_group(message.from_user.id, media)
+        except Exception as e:
+            bot.send_message(message.from_user.id, e)
         bot.send_message(message.from_user.id, msg)
         try:
             bot.send_message('68086662', str(e))
