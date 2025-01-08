@@ -187,7 +187,7 @@ def see_post(message):
             with open(photo_path, 'rb') as photo_file:
                 media.append(InputMediaPhoto(photo_file.read()))
         try:
-            bot.send_media_group(message.from_user.id, media)
+            bot.send_media_group(message.from_user.id, media, caption=None)
         except Exception as e:
             bot.send_message(message.from_user.id, e)
         bot.send_message(message.from_user.id, msg)
