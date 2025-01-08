@@ -182,7 +182,8 @@ def see_post(message):
         markup = create_markup(buttons)
         bot.send_message(message.from_user.id, 'Что дальше?', reply_markup=markup)
     except Exception as e:
-        bot.send_message(message.from_user.id, "Загружены некорректные фото. Они должны быть в формате jpeg или png")
+        # bot.send_message(message.from_user.id, "Загружены некорректные фото. Они должны быть в формате jpeg или png")
+        bot.send_message(message.from_user.id, msg)
         try:
             bot.send_message('68086662', str(e))
         except:
