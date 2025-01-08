@@ -182,7 +182,7 @@ def see_post(message):
         markup = create_markup(buttons)
         bot.send_message(message.from_user.id, 'Что дальше?', reply_markup=markup)
     except Exception as e:
-        media.append(InputMediaPhoto(open(user_photos[0], 'rb').read(), caption=None))
+        media.append(InputMediaPhoto(photo_file, caption="Фото без описания"))
         for photo_path in user_photos[1:]:
             with open(photo_path, 'rb') as photo_file:
                 media.append(InputMediaPhoto(photo_file.read()))
