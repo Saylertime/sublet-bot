@@ -182,6 +182,14 @@ def see_post(message):
         markup = create_markup(buttons)
         bot.send_message(message.from_user.id, 'Что дальше?', reply_markup=markup)
     except Exception as e:
+        media = []
+        for photo_path in user_photos:
+            with open(photo_path, 'rb') as photo_file:
+                media.append(InputMediaPhoto(photo_file.read()))
+        try:
+            bot.send_media_group(message.from_user.id, media)
+        except:
+            pass
         bot.send_message(message.from_user.id, msg)
         try:
             bot.send_message('68086662', str(e))
