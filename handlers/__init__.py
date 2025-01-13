@@ -1,1 +1,9 @@
-from . import default_handlers
+from .echo import router_echo
+from .add_post import router_add_post
+from .test import router_test
+from .edit_post import router_edit
+from .free import router_free
+from .start import router_start
+
+
+routers = [router_start, router_add_post, router_test, router_edit, router_free, router_echo]

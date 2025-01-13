@@ -1,18 +1,20 @@
-from telebot.handler_backends import State, StatesGroup
+from aiogram.fsm.state import State, StatesGroup
+
 
 class OverallState(StatesGroup):
-    """ Класс со всеми необходимыми состояниями """
+    """Класс со всеми необходимыми состояниями"""
 
     add_post = State()
-    move_in = State()
-    checkout = State()
+    check_in = State()
+    check_out = State()
     address = State()
     city = State()
     type = State()
     description = State()
     photos = State()
     more_photos = State()
-    test = State()
+    test1 = State()
+    test2 = State()
 
     edit = State()
     edit_address = State()

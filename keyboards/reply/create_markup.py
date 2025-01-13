@@ -1,18 +1,45 @@
-from telebot import types
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
 
 def create_markup(buttons):
-    """ Создает кнопки для ответа """
-
-    markup = types.InlineKeyboardMarkup()
+    """Создает кнопки для ответа"""
+    inline_keyboard = []
     for text, callback_data in buttons:
-        markup.add(types.InlineKeyboardButton(text=text, callback_data=callback_data))
-    return markup
+        button = InlineKeyboardButton(text=text, callback_data=callback_data)
+        inline_keyboard.append([button])
+    return InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
+
 
 def create_markup_with_url(buttons):
-    markup = types.InlineKeyboardMarkup()
+    inline_keyboard = []
     for text, url, callback_data in buttons:
-        button = types.InlineKeyboardButton(text=text, url=url, callback_data=callback_data)
-        markup.add(button)
-    # for text, url in buttons:
-    #     markup.add(types.InlineKeyboardButton(text=text, url=url))
-    return markup
+        if url:
+            button = InlineKeyboardButton(text=text, url=url)
+        elif callback_data:
+            button = InlineKeyboardButton(text=text, callback_data=callback_data)
+        else:
+            continue
+        inline_keyboard.append([button])
+    return InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
+
+
+def create_markup_with_url_2_rows(buttons):
+    inline_keyboard = []
+    row = []  # Временный список для формирования строки
+
+    for index, (text, url, callback_data) in enumerate(buttons):
+        if url:
+            button = InlineKeyboardButton(text=text, url=url)
+        elif callback_data:
+            button = InlineKeyboardButton(text=text, callback_data=callback_data)
+        else:
+            continue
+
+        row.append(button)  # Добавляем кнопку в текущую строку
+
+        # Если в строке две кнопки или это последняя кнопка, добавляем строку в клавиатуру
+        if len(row) == 2 or index == len(buttons) - 1:
+            inline_keyboard.append(row)
+            row = []  # Очищаем строку для следующей итерации
+
+    return InlineKeyboardMarkup(inline_keyboard=inline_keyboard)

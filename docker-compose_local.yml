@@ -27,7 +27,7 @@ services:
           path: requirements.txt
 
   postgres:
-    image: postgres
+    image: postgres:16
     container_name: sublet_postgres
     environment:
       - POSTGRES_USER=${POSTGRES_USER}

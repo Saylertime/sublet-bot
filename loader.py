@@ -1,9 +1,10 @@
-from telebot import TeleBot
-from telebot.storage import StateMemoryStorage
+from aiogram import Bot, Dispatcher
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 from config_data import config
 
-storage = StateMemoryStorage()
-bot = TeleBot(token=config.BOT_TOKEN, state_storage=storage)
 
-
-
+bot = Bot(
+    token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+)
+dp = Dispatcher()

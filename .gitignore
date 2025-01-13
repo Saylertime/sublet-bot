@@ -9,16 +9,13 @@
 
 .idea/
 
+.idea
+
 **/*.log
 
 venv/
-
-
 
 **/venv/
 
 **/__pycache__/
 
-.env
-
-/.env
