@@ -1,4 +1,4 @@
-from keyboards.reply.create_markup import create_markup
+from keyboards.create_markup import create_markup
 from pg_maker import add_user
 
 from aiogram import Router, F

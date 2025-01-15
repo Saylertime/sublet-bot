@@ -4,7 +4,8 @@ from handlers.free import show_variants
 from utils import show_post
 import asyncio
 from datetime import datetime
-from keyboards.reply.create_markup import create_markup
+from keyboards import all_cities, create_markup
+from config_data import config
 
 from aiogram import Router, F
 from aiogram.filters import Command
@@ -31,16 +32,16 @@ async def add_post(message, state):
 
 @router_add_post.message(OverallState.add_post)
 async def start_post(message, state):
-    await state.update_data(command="add_post")
-    if message.from_user.username is None:
-        await state.update_data(contact=message.text)
-    buttons = [("Тель-Авив и окрестности", "Тель-Авив"),
-               ("Хайфа", "Хайфа")]
-    markup = create_markup(buttons)
-    await message.answer("Выберите город: ", reply_markup=markup)
+    try:
+        await state.update_data(command="add_post")
+        if message.from_user.username is None:
+            await state.update_data(contact=message.text)
+        await all_cities(message)
+    except Exception as e:
+        print(str(e))
 
 
-@router_add_post.callback_query(F.data.in_({"Тель-Авив", "Хайфа"}))
+@router_add_post.callback_query(F.data.in_(config.CITIES))
 async def city_callback(message, state):
     await state.update_data(city=message.data)
     command = (await state.get_data()).get("command", "")
@@ -54,7 +55,7 @@ async def city_callback(message, state):
 
 
 @router_add_post.message(OverallState.type)
-async def type_of_sublet(message, state):
+async def type_of_sublet(message):
     buttons = [("Квартира", "Тип Квартира",),
                ("Комната", "Тип Комната")]
     markup = create_markup(buttons)
@@ -174,15 +175,3 @@ async def final(message, state):
 )
 async def not_photo_group(message):
     await message.answer("Нужно отправить фотографии альбомом. Попробуйте ещё раз")
-
-
-
-
-
-# @bot.message_handler(content_types=['text', 'document'], func=lambda message: True, state=OverallState.photos)
-# def handle_text_messages(message):
-#     if message.content_type == 'text':
-#         bot.reply_to(message, "Пожалуйста, отправьте фотографии.")
-#     elif message.content_type == 'document':
-#         bot.reply_to(message, "Пожалуйста, отправьте фотографии, а не документы.")
-

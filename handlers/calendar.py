@@ -1,9 +1,8 @@
 from states.overall import OverallState
 from pg_maker import change_dates_pg
-from handlers.edit_post import change_check_out, edit_post
+from handlers.edit_post import change_check_out
 from handlers.add_post import check_out, handle_album_photo
-
-from keyboards.reply.create_markup import create_markup
+from keyboards import all_cities, create_markup
 
 from aiogram import Router
 from aiogram_calendar import DialogCalendar, DialogCalendarCallback
@@ -59,7 +58,4 @@ async def process_dialog_calendar(callback_query, callback_data, state):
 
         elif stage == "finding":
             await state.update_data(check_in=date)
-            buttons = [("Тель-Авив и окрестности", "Тель-Авив",),
-                       ("Хайфа", "Хайфа")]
-            markup = create_markup(buttons)
-            await callback_query.message.edit_text("Выберите город:", reply_markup=markup)
+            await all_cities(callback_query)

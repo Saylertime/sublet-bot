@@ -1,6 +1,7 @@
 import aiofiles
 from aiogram import Router, F
-from pg_maker import add_cities, all_cities
+
+from config_data import config
 
 
 router_echo = Router()
@@ -17,14 +18,7 @@ async def history_log(message):
 
 @router_echo.message(F.text.startswith("ГОРОДА"))
 async def add_city(message):
-    cities = message.text.split(" ")[1:]
-    for city in cities:
-        await add_cities(city)
-    msg = await all_cities()
-    try:
-        await message.answer(str(msg))
-    except Exception as e:
-        await message.answer(str(e))
+    await message.answer("\n".join(config.CITIES))
 
 
 @router_echo.message(~F.text.startswith("/"))

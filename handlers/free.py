@@ -1,5 +1,5 @@
 from states.overall import OverallState
-from keyboards.reply.create_markup import create_markup
+from keyboards import all_cities, create_markup
 from datetime import datetime
 
 from pg_maker import get_active_sublets
@@ -122,10 +122,7 @@ async def month_callback(message, state):
 @router_free.callback_query(F.data == "В городе")
 async def city_callback(message, state):
     await state.update_data(by_what="В городе", command="free")
-    buttons = [("Тель-Авив и окрестности", "Тель-Авив",),
-               ("Хайфа", "Хайфа")]
-    markup = create_markup(buttons)
-    await message.message.edit_text("Выберите город:", reply_markup=markup)
+    await all_cities(message)
 
 
 @router_free.callback_query(F.data == "Все сразу")
@@ -155,11 +152,7 @@ async def startswith_month(message, state):
 async def startswith_year(message, state):
     year = message.data.split("_")[1] if message.data.startswith("year_") else None
     await state.update_data(year=year)
-
-    buttons = [("Тель-Авив и окрестности", "Тель-Авив",),
-               ("Хайфа", "Хайфа")]
-    markup = create_markup(buttons)
-    await message.message.edit_text(f"Выберите город: ", reply_markup=markup)
+    await all_cities(message)
 
 
 @router_free.callback_query(F.data.startswith("load_more_"))

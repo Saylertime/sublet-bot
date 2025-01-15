@@ -8,7 +8,7 @@ from pg_maker import (
     get_active_sublets,
 )
 from utils import show_post
-from keyboards.reply.create_markup import create_markup
+from keyboards import create_markup
 from states.overall import OverallState
 import asyncio
 from datetime import datetime

@@ -75,17 +75,6 @@ async def create_cities():
         await conn.execute(sql)
 
 
-async def add_cities(city):
-    async with db_connection() as conn:
-        await create_cities()
-        sql = """
-        INSERT INTO public.cities (city)
-        VALUES ($1)
-        ON CONFLICT (city) DO NOTHING;
-        """
-        await conn.execute(sql, city)
-
-
 async def add_user(username, user_id):
     async with db_connection() as conn:
         await create_users()
@@ -100,13 +89,6 @@ async def add_user(username, user_id):
             VALUES ($1, $2);
             """
             await conn.execute(sql, username, user_id)
-
-
-async def all_cities():
-    async with db_connection() as conn:
-        sql = """SELECT city FROM public.cities"""
-        cities = await conn.fetch(sql)
-        return [record["city"] for record in cities]
 
 
 async def all_users_from_db():

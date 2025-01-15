@@ -13,6 +13,7 @@ DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_HOST = os.getenv("DB_HOST")
 ADMINS = os.getenv("ADMINS").split(",")
+CITIES = os.getenv("CITIES").split(", ")
 
 
 DEFAULT_COMMANDS = (
