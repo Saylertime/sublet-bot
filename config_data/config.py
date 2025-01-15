@@ -8,11 +8,11 @@ else:
 
 LOCAL_ENV = os.getenv("LOCAL_ENV")
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-USERKEY_TEXT_RU = os.getenv("USERKEY_TEXT_RU")
-DB_NAME = os.getenv('DB_NAME')
-DB_USER = os.getenv('DB_USER')
-DB_PASSWORD = os.getenv('DB_PASSWORD')
-DB_HOST = os.getenv('DB_HOST')
+DB_NAME = os.getenv("DB_NAME")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_HOST = os.getenv("DB_HOST")
+ADMINS = os.getenv("ADMINS").split(",")
 
 
 DEFAULT_COMMANDS = (

@@ -9,7 +9,7 @@ user = config.DB_USER
 password = config.DB_PASSWORD
 host = config.DB_HOST
 
-desired_timezone = pytz.timezone('Europe/Moscow')
+desired_timezone = pytz.timezone("Europe/Moscow")
 
 
 @asynccontextmanager
@@ -54,7 +54,8 @@ async def new_table():
 
 async def create_users():
     async with db_connection() as conn:
-        sql = """CREATE TABLE IF NOT EXISTS public.users 
+        sql = """
+        CREATE TABLE IF NOT EXISTS public.users 
         (
         username VARCHAR,
         user_id VARCHAR,
@@ -62,6 +63,27 @@ async def create_users():
         );
         """
         await conn.execute(sql)
+
+
+async def create_cities():
+    async with db_connection() as conn:
+        sql = """
+        CREATE TABLE IF NOT EXISTS public.cities (
+            city VARCHAR UNIQUE
+        );
+        """
+        await conn.execute(sql)
+
+
+async def add_cities(city):
+    async with db_connection() as conn:
+        await create_cities()
+        sql = """
+        INSERT INTO public.cities (city)
+        VALUES ($1)
+        ON CONFLICT (city) DO NOTHING;
+        """
+        await conn.execute(sql, city)
 
 
 async def add_user(username, user_id):
@@ -72,11 +94,19 @@ async def add_user(username, user_id):
         if existing_user:
             return
         else:
-            sql = """INSERT INTO public.users
-        (username, user_id)
-        VALUES ($1, $2);
+            sql = """
+            INSERT INTO public.users
+            (username, user_id)
+            VALUES ($1, $2);
             """
             await conn.execute(sql, username, user_id)
+
+
+async def all_cities():
+    async with db_connection() as conn:
+        sql = """SELECT city FROM public.cities"""
+        cities = await conn.fetch(sql)
+        return [record["city"] for record in cities]
 
 
 async def all_users_from_db():
@@ -139,7 +169,6 @@ async def type_of_sublet(post_id):
         sql = """SELECT type 
                  FROM public.sublets 
                  WHERE id = $1"""
-
         result = await conn.fetchrow(sql, int(post_id))
         return result["type"]
 
@@ -149,8 +178,8 @@ async def status_of_sublet(post_id):
         sql = """SELECT is_active 
                  FROM public.sublets 
                  WHERE id = $1"""
-    result = await conn.execute(sql, post_id)
-    return result
+        result = await conn.fetchrow(sql, int(post_id))
+        return result["is_active"]
 
 
 async def change_post(post_id, parameter_name, parameter):
@@ -158,10 +187,15 @@ async def change_post(post_id, parameter_name, parameter):
         sql = f"""UPDATE public.sublets
                 SET {parameter_name} = $1
                 WHERE id = $2"""
-        await conn.execute(sql, parameter, post_id)
+        result = await conn.execute(sql, parameter, int(post_id))
+
+        rows_affected = result.split()[-1]
+        if int(rows_affected) > 0:
+            return True
+        return False
 
 
-async def change_dates_pg(post_id, date_in, date_out):
+async def change_dates_pg(date_in, date_out, post_id):
     async with db_connection() as conn:
         sql = """UPDATE public.sublets
                 SET date_in = $1, date_out = $2
@@ -197,42 +231,19 @@ async def update_photos(post_id, photos):
         photo_values = photos[:8] if photos else [None] * 8
         photo_values += [None] * (8 - len(photo_values))
 
-        await conn.execute(sql_update, photo_values)
+        await conn.execute(sql_update, *photo_values, post_id)
 
 
-async def get_user_info_and_photos(post_id):
-    async with db_connection() as conn:
-        sql = """SELECT username, city, date_in, date_out, type, address, description, 
-                 photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8 
-                 FROM public.sublets 
-                 WHERE id = $1"""
-
-        info_and_photos = await conn.fetchrow(sql, post_id)
-
-        if info_and_photos:
-            username, city, date_in, date_out, type, address, description, *photos = info_and_photos
-            f_date_in = date_in.strftime("%d-%m-%Y")
-            f_date_out = date_out.strftime("%d-%m-%Y")
-            user_info = f"🏠 Город: {city}\n🛌 Тип: {type}\n📬 Адрес: {address}\n" \
-                        f"📅 Свободные даты: \n{f_date_in} — {f_date_out}\n\n{description}\n\nОпубликовал: @{username}"
-            user_photos = [photo for photo in photos if photo is not None]
-        else:
-            user_info = "Информация о пользователе не найдена"
-            user_photos = []
-
-        return user_info, user_photos
-
-
-async def get_active_sublets(flag='', city='', date='', year='', month='', offset=0, limit=5):
+async def get_active_sublets(flag='', city='', date='', year='', month='', post_id='', offset=0, limit=5):
     async with db_connection() as conn:
 
         if flag == 'by_date':
             sql = """
                     SELECT username, city, date_in, date_out, type, address, description, 
                     photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8 
-                     FROM public.sublets 
-                     WHERE city = $1 AND $2 >= date_in AND $3 < date_out AND is_active = True
-                     LIMIT $4 OFFSET $5
+                    FROM public.sublets 
+                    WHERE city = $1 AND $2 >= date_in AND $3 < date_out AND is_active = True
+                    LIMIT $4 OFFSET $5
                 """
             result = await conn.fetch(sql, city, date, date, limit, offset)
 
@@ -268,7 +279,7 @@ async def get_active_sublets(flag='', city='', date='', year='', month='', offse
                     SELECT username, city, date_in, date_out, type, address, description, 
                     photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8 
                     FROM public.sublets
-                    WHERE date_out > CURRENT_DATE
+                    WHERE date_out > CURRENT_DATE AND is_active IS TRUE
                     LIMIT $1 OFFSET $2
                 """
             result = await conn.fetch(sql, limit, offset)
@@ -282,6 +293,15 @@ async def get_active_sublets(flag='', city='', date='', year='', month='', offse
                     LIMIT 1;
                 """
             result = await conn.fetch(sql)
+
+        elif flag == 'my_post':
+            sql = """
+                     SELECT username, city, date_in, date_out, type, address, description, 
+                           photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8 
+                    FROM public.sublets 
+                    WHERE id = $1
+                """
+            result = await conn.fetch(sql, post_id)
 
         all_info_and_photos = result
 
