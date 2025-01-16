@@ -27,31 +27,34 @@ router_edit = Router()
 @router_edit.callback_query(F.data == "edit_post")
 async def edit_post(message, state):
     await state.clear()
-    buttons = await find_my_sublets(str(message.from_user.id))
+    try:
+        buttons = await find_my_sublets(str(message.from_user.id))
 
-    if buttons:
-        buttons = [(address, str(user_id)) for address, user_id in buttons]
-        buttons.append(("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"))
-        markup = create_markup(buttons)
-        if isinstance(message, CallbackQuery):
-            await message.edit_text(
-                "Какое объявление нужно отредактировать?", reply_markup=markup
-            )
+        if buttons:
+            buttons = [(address, str(user_id)) for address, user_id in buttons]
+            buttons.append(("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"))
+            markup = create_markup(buttons)
+            if isinstance(message, CallbackQuery):
+                await message.message.edit_text(
+                    "Какое объявление нужно отредактировать?", reply_markup=markup
+                )
+            else:
+                await message.answer(
+                    "Какое объявление нужно отредактировать?", reply_markup=markup
+                )
         else:
-            await message.answer(
-                "Какое объявление нужно отредактировать?", reply_markup=markup
-            )
-    else:
-        buttons = [
-            ("Создать объявление", "add_post"),
-            ("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"),
-        ]
-        markup = create_markup(buttons)
-        msg = "У вас пока нет объявлений"
-        if isinstance(message, CallbackQuery):
-            await message.message.edit_text(msg, reply_markup=markup)
-        else:
-            await message.answer(msg, reply_markup=markup)
+            buttons = [
+                ("Создать объявление", "add_post"),
+                ("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"),
+            ]
+            markup = create_markup(buttons)
+            msg = "У вас пока нет объявлений"
+            if isinstance(message, CallbackQuery):
+                await message.message.edit_text(msg, reply_markup=markup)
+            else:
+                await message.answer(msg, reply_markup=markup)
+    except Exception as e:
+        print(e)
 
 
 @router_edit.message(OverallState.edit)
