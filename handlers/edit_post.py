@@ -30,7 +30,7 @@ async def edit_post(message, state):
     buttons = await find_my_sublets(str(message.from_user.id))
 
     if buttons:
-        buttons = [(address, str(id)) for address, id in buttons]
+        buttons = [(address, str(user_id)) for address, user_id in buttons]
         buttons.append(("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"))
         markup = create_markup(buttons)
         if isinstance(message, CallbackQuery):
@@ -235,7 +235,7 @@ async def delete_post_from_db(message, state):
 @router_edit.callback_query(F.data == "Изменить даты")
 async def change_check_in(message, state):
     await state.update_data(stage="change_check_in")
-    await message.message.answer(
+    await message.message.edit_text(
         "Выберите дату заезда",
         reply_markup=await DialogCalendar().start_calendar(
             year=datetime.now().year, month=datetime.now().month

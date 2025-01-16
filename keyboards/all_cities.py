@@ -11,4 +11,8 @@ async def all_cities(message):
     buttons = [(city, city) for city in cities]
     markup = create_markup_3_buttons(buttons)
     msg = "Выберите город: "
-    await message.answer(msg, reply_markup=markup)
+    try:
+        await message.edit_text(msg, reply_markup=markup)
+    except Exception as e:
+        print(e)
+        await message.answer(msg, reply_markup=markup)

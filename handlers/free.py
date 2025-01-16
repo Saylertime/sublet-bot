@@ -102,7 +102,7 @@ async def send_sublets(result, message, state):
 async def date_callback(message, state):
     await state.update_data(by_what="Дата", stage="finding", command="free")
 
-    await message.message.answer(
+    await message.message.edit_text(
         "Выберите дату заезда",
         reply_markup=await DialogCalendar().start_calendar(
             year=datetime.now().year, month=datetime.now().month
