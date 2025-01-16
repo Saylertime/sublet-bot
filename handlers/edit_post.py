@@ -52,9 +52,13 @@ async def edit_post(message, state):
 
 @router_edit.message(OverallState.edit)
 @router_edit.callback_query(F.data == "Назад")
-async def choose_edit_button(message):
+async def choose_edit_button(message, state):
+    post_id = (await state.get_data()).get("post_id", "")
+    is_active = await status_of_sublet(post_id)
+
     buttons = [
-        ("⏻ Аквтивировать/Отключить пост ⏻", "Изменить статус"),
+        (f"⏻ {'Отключить пост' if is_active else 'Активировать пост'} ⏻",
+         f"{'is_active_False' if is_active else 'is_active_True'}"),
         ("🛌 Изменить тип саблета 🛌", "Изменить тип саблета"),
         ("📬 Изменить адрес 📬", "Изменить адрес"),
         ("📝 Изменить описание 📝", "Изменить описание"),
@@ -97,36 +101,16 @@ async def change_type_final(message, state):
         post_id=post_id, parameter_name="type", parameter=message.data.split()[2]
     )
     await message.answer("Тип изменён!")
-    await choose_edit_button(message)
-
-
-@router_edit.callback_query(F.data == "Изменить статус")
-async def change_status(message, state):
-    post_id = (await state.get_data()).get("post_id", "")
-    my_type = await status_of_sublet(post_id)
-    if my_type:
-        buttons = [("Отключить объявление", "is_active_False")]
-    else:
-        buttons = [("Активировать объявление", "is_active_True")]
-    buttons.append(("⬇ Назад ⬇", "Назад"))
-    markup = create_markup(buttons)
-    await message.message.edit_text(
-        f'Сейчас объявление {"Активировано" if my_type else "Отключено"}',
-        reply_markup=markup,
-    )
+    await choose_edit_button(message, state)
 
 
 @router_edit.callback_query(F.data.startswith("is_active_"))
 async def disable_ad(message, state):
     flag = message.data.split("_")[2]
+    is_active = flag == "True"
     post_id = (await state.get_data()).get("post_id", "")
-    if flag:
-        await change_post(post_id=post_id, parameter_name="is_active", parameter=False)
-        await message.message.edit_text("Объявление больше не отображается в поиске!")
-    else:
-        await change_post(post_id=post_id, parameter_name="is_active", parameter=True)
-        await message.message.edit_text("Объявление активировано!")
-    await choose_edit_button(message)
+    await change_post(post_id=post_id, parameter_name="is_active", parameter=is_active)
+    await choose_edit_button(message, state)
 
 
 @router_edit.callback_query(F.data == "Изменить адрес")
@@ -141,7 +125,7 @@ async def edit_address(message, state):
     post_id = (await state.get_data()).get("post_id", "")
     await change_post(post_id=post_id, parameter_name="address", parameter=message.text)
     await message.answer("Адрес изменен!")
-    await choose_edit_button(message)
+    await choose_edit_button(message, state)
 
 
 @router_edit.callback_query(F.data == "Изменить описание")
@@ -158,7 +142,7 @@ async def edit_description(message, state):
         post_id=post_id, parameter_name="description", parameter=message.text
     )
     await message.answer("Описание изменено!")
-    await choose_edit_button(message)
+    await choose_edit_button(message, state)
 
 
 @router_edit.callback_query(F.data == "Изменить фотографии")
@@ -205,7 +189,7 @@ async def finalize_album(group_id, chat_id, state, message):
         await state.update_data(photos=album)
         await update_photos(int(post_id), album)
         await message.answer(f"{len(album) if len(album) <=8 else 8} фото загружены!")
-        await choose_edit_button(message)
+        await choose_edit_button(message, state)
 
 
 @router_edit.callback_query(F.data == "Посмотреть пост")
@@ -259,7 +243,7 @@ async def edit_post_callback(message, state):
     post_id = message.data
     await state.update_data(post_id=post_id)
     await state.set_state(OverallState.edit)
-    await choose_edit_button(message)
+    await choose_edit_button(message, state)
 
 
 @router_edit.message(
