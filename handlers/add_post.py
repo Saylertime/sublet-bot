@@ -41,21 +41,24 @@ async def start_post(message, state):
         print(str(e))
 
 
-@router_add_post.callback_query(F.data.in_(config.CITIES))
+@router_add_post.callback_query(F.data.in_(tuple(config.CITIES)))
 async def city_callback(message, state):
-    await state.update_data(city=message.data)
-    command = (await state.get_data()).get("command", "")
-    if command == "add_post":
-        await state.set_state(OverallState.type)
-        await type_of_sublet(message.message, state)
+    try:
+        await state.update_data(city=message.data)
+        command = (await state.get_data()).get("command", "")
+        if command == "add_post":
+            await state.set_state(OverallState.type)
+            await type_of_sublet(message.message, state)
 
-    elif command == "free":
-        await state.set_state(OverallState.free_show)
-        await show_variants(message, state)
+        elif command == "free":
+            await state.set_state(OverallState.free_show)
+            await show_variants(message, state)
+    except Exception as e:
+        print(str(e))
 
 
 @router_add_post.message(OverallState.type)
-async def type_of_sublet(message):
+async def type_of_sublet(message, state):
     buttons = [("Квартира", "Тип Квартира",),
                ("Комната", "Тип Комната")]
     markup = create_markup(buttons)

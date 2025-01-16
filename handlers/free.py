@@ -35,8 +35,8 @@ async def free(message, state):
     await state.set_state(OverallState.free_dates)
     await state.update_data(offset=0, limit=5)
 
-    buttons = [("📅В конкретную дату📅", "Дата"),
-               ("🏙️Все объявления в городе🏙️", "В городе"),
+    buttons = [("📅 В конкретную дату 📅", "Дата"),
+               ("🏙️ Все объявления в городе 🏙️", "В городе"),
                ("🔎 Все доступные в определенном месяце 🔎", "Месяц"),
                ("🇮🇱 Все доступные саблеты во всех городах 🇮🇱", "Все сразу"),
                ("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start")]
@@ -80,9 +80,6 @@ async def send_sublets(result, message, state):
         city = data.get("city", "No city")
 
         if len(result) >= 5:
-            offset = data["offset"]
-            offset += 5
-            await state.update_data(offset=offset)
             markup = create_markup([("Показать ещё", f"load_more_{city}")])
             await message.message.answer("Хотите увидеть больше?", reply_markup=markup)
 
@@ -135,17 +132,14 @@ async def city_callback(message, state):
 
 @router_free.callback_query(F.data.startswith("month_"))
 async def startswith_month(message, state):
-    try:
-        month = message.data.split("_")[1] if message.data.startswith("month_") else None
-        await state.update_data(month=int(months_dict[month]), command="free")
-        buttons = []
-        years = [str(year) for year in range(2025, 2028)]
-        for year in years:
-            buttons.append((year, f"year_{year}"))
-        markup = create_markup(buttons)
-        await message.message.edit_text(f"Выберите год:", reply_markup=markup)
-    except Exception as e:
-        print(str(e))
+    month = message.data.split("_")[1] if message.data.startswith("month_") else None
+    await state.update_data(month=int(months_dict[month]), command="free")
+    buttons = []
+    years = [str(year) for year in range(2025, 2028)]
+    for year in years:
+        buttons.append((year, f"year_{year}"))
+    markup = create_markup(buttons)
+    await message.message.edit_text(f"Выберите год:", reply_markup=markup)
 
 
 @router_free.callback_query(F.data.startswith("year_"))
@@ -165,9 +159,9 @@ async def load_more_sublets(message, state):
     await state.update_data(offset=new_offset)
 
     if city != "No city":
-        result = await get_active_sublets(flag="by_active", city=city, offset=data["offset"])
+        result = await get_active_sublets(flag="by_active", city=city, offset=new_offset)
     else:
-        result = await get_active_sublets(flag="all_posts", offset=data["offset"])
+        result = await get_active_sublets(flag="all_posts", offset=new_offset)
 
     if result:
         await send_sublets(result, message, state)

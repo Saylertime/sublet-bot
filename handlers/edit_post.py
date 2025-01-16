@@ -47,14 +47,14 @@ async def edit_post(message, state):
 @router_edit.message(OverallState.edit)
 @router_edit.callback_query(F.data == "Назад")
 async def choose_edit_button(message):
-    buttons = [("Аквтивировать/Отключить пост", "Изменить статус"),
-               ("Изменить тип саблета", "Изменить тип саблета"),
-               ("Изменить адрес", "Изменить адрес"),
-               ("Изменить описание", "Изменить описание"),
-               ("Изменить фотографии", "Изменить фотографии"),
-               ("Изменить даты", "Изменить даты"),
-               ("Посмотреть пост", "Посмотреть пост"),
-               ("Удалить пост", "Удалить пост"),
+    buttons = [("⏻ Аквтивировать/Отключить пост ⏻", "Изменить статус"),
+               ("🛌 Изменить тип саблета 🛌", "Изменить тип саблета"),
+               ("📬 Изменить адрес 📬", "Изменить адрес"),
+               ("📝 Изменить описание 📝", "Изменить описание"),
+               ("📸 Изменить фотографии 📸", "Изменить фотографии"),
+               ("📅 Изменить даты 📅", "Изменить даты"),
+               ("📰 Посмотреть пост 📰", "Посмотреть пост"),
+               ("🗑️ Удалить пост 🗑️", "Удалить пост"),
                ("⬇ Назад к моим объявлениям ⬇", "edit_post"),
                ("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start")]
     markup = create_markup(buttons)
@@ -91,29 +91,36 @@ async def change_status(message, state):
     post_id = (await state.get_data()).get("post_id", "")
     my_type = await status_of_sublet(post_id)
     if my_type:
-        buttons = [("Отключить объявление", "Отключить объявление")]
+        buttons = [("Отключить объявление", "is_active_False")]
     else:
-        buttons = [("Активировать объявление", "Активировать объявление")]
+        buttons = [("Активировать объявление", "is_active_True")]
     buttons.append(("⬇ Назад ⬇", "Назад"))
     markup = create_markup(buttons)
     await message.message.edit_text(f'Сейчас объявление {"Активировано" if my_type else "Отключено"}',
                                     reply_markup=markup)
 
 
-@router_edit.callback_query(F.data.startswith("Отключить объявление"))
+@router_edit.callback_query(F.data.startswith("is_active_"))
 async def disable_ad(message, state):
+    print('tut')
+    flag = message.data.split("_")[2]
+    print(flag)
     post_id = (await state.get_data()).get("post_id", "")
-    print(post_id)
-    result = await change_post(post_id=post_id, parameter_name="is_active", parameter=False)
-    if result:
-        await message.message.answer("Объявление больше не отображается в поиске!")
+    if flag:
+        await change_post(post_id=post_id, parameter_name="is_active", parameter=False)
+        await message.message.edit_text("Объявление больше не отображается в поиске!")
+    else:
+        await change_post(post_id=post_id, parameter_name="is_active", parameter=True)
+        await message.message.edit_text("Объявление активировано!")
+    await choose_edit_button(message)
 
 
-@router_edit.callback_query(F.data.startswith("Активировать объявление"))
-async def disable_ad(message, state):
-    post_id = (await state.get_data()).get("post_id", "")
-    await change_post(post_id=post_id, parameter_name="is_active", parameter=True)
-    await message.message.answer("Объявление активировано!")
+# @router_edit.callback_query(F.data.startswith("Активировать объявление"))
+# async def disable_ad(message, state):
+#     post_id = (await state.get_data()).get("post_id", "")
+#     await change_post(post_id=post_id, parameter_name="is_active", parameter=True)
+#     await message.message.edit_text("Объявление активировано!")
+#     await choose_edit_button(message)
 
 
 @router_edit.callback_query(F.data == "Изменить адрес")

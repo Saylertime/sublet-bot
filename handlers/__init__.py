@@ -7,4 +7,4 @@ from .start import router_start
 from .calendar import router_calendar
 
 
-routers = [router_start, router_add_post, router_test, router_edit, router_free, router_calendar, router_echo]
+routers = [router_start, router_add_post, router_free, router_edit, router_calendar, router_test, router_echo]
