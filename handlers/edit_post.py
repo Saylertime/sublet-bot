@@ -34,7 +34,7 @@ async def edit_post(message, state):
         buttons.append(("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"))
         markup = create_markup(buttons)
         if isinstance(message, CallbackQuery):
-            await message.message.edit_text(
+            await message.edit_text(
                 "Какое объявление нужно отредактировать?", reply_markup=markup
             )
         else:
@@ -47,7 +47,11 @@ async def edit_post(message, state):
             ("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"),
         ]
         markup = create_markup(buttons)
-        await message.answer("У вас пока нет объявлений", reply_markup=markup)
+        msg = "У вас пока нет объявлений"
+        if isinstance(message, CallbackQuery):
+            await message.message.edit_text(msg, reply_markup=markup)
+        else:
+            await message.answer(msg, reply_markup=markup)
 
 
 @router_edit.message(OverallState.edit)
