@@ -24,8 +24,10 @@ async def add_post(message, state):
         message = message.message
 
     if not name:
-        await message.answer("Пожалуйста, введите свой контакт или номер телефона. "
-                             "Эта информация будет указана в объявлении")
+        await message.answer(
+            "Пожалуйста, введите свой контакт или номер телефона. "
+            "Эта информация будет указана в объявлении"
+        )
     else:
         await start_post(message, state)
 
@@ -59,8 +61,13 @@ async def city_callback(message, state):
 
 @router_add_post.message(OverallState.type)
 async def type_of_sublet(message, state):
-    buttons = [("Квартира", "Тип Квартира",),
-               ("Комната", "Тип Комната")]
+    buttons = [
+        (
+            "Квартира",
+            "Тип Квартира",
+        ),
+        ("Комната", "Тип Комната"),
+    ]
     markup = create_markup(buttons)
     await message.edit_text("Выберите тип саблета: ", reply_markup=markup)
 
@@ -81,21 +88,27 @@ async def address(message, state):
 @router_add_post.message(OverallState.description)
 async def description(message, state):
     await state.update_data(address=message.text)
-    await message.answer("Опишите саблет. Здесь можно оставить свои контакты и добавить эмодзи 🏠\n\n"
-                         "ВНИМАНИЕ: максимальная длина сообщения — 700 символов")
+    await message.answer(
+        "Опишите саблет. Здесь можно оставить свои контакты и добавить эмодзи 🏠\n\n"
+        "ВНИМАНИЕ: максимальная длина сообщения — 700 символов"
+    )
     await state.set_state(OverallState.check_in)
 
 
 @router_add_post.message(OverallState.check_in)
 async def check_in(message, state):
     if len(message.text) < 700:
-        await state.update_data(description=message.text,
-                                stage="check_in")
+        await state.update_data(description=message.text, stage="check_in")
         await message.answer(
             "Выберите дату заезда",
-            reply_markup=await DialogCalendar().start_calendar(year=datetime.now().year, month=datetime.now().month))
+            reply_markup=await DialogCalendar().start_calendar(
+                year=datetime.now().year, month=datetime.now().month
+            ),
+        )
     else:
-        await message.answer("Описание слишком длинное. Сократите его до 700 знаков и попробуйте еще раз")
+        await message.answer(
+            "Описание слишком длинное. Сократите его до 700 знаков и попробуйте еще раз"
+        )
 
 
 @router_add_post.message(OverallState.check_out)
@@ -103,7 +116,10 @@ async def check_out(message, state):
     await state.update_data(stage="check_out")
     await message.answer(
         "Выберите дату выезда",
-        reply_markup=await DialogCalendar().start_calendar(year=datetime.now().year, month=datetime.now().month))
+        reply_markup=await DialogCalendar().start_calendar(
+            year=datetime.now().year, month=datetime.now().month
+        ),
+    )
 
 
 media_groups = {}
@@ -111,7 +127,9 @@ timers = {}
 MAX_PHOTOS = 8
 
 
-@router_add_post.message(F.media_group_id, F.content_type == ContentType.PHOTO, OverallState.photos)
+@router_add_post.message(
+    F.media_group_id, F.content_type == ContentType.PHOTO, OverallState.photos
+)
 async def handle_album_photo(message, state):
     group_id = message.media_group_id
 
@@ -123,7 +141,9 @@ async def handle_album_photo(message, state):
     if group_id in timers:
         timers[group_id].cancel()
 
-    timers[group_id] = asyncio.create_task(finalize_album(group_id, message.chat.id, state, message))
+    timers[group_id] = asyncio.create_task(
+        finalize_album(group_id, message.chat.id, state, message)
+    )
 
 
 async def finalize_album(group_id, chat_id, state, message):
@@ -140,24 +160,26 @@ async def finalize_album(group_id, chat_id, state, message):
 
 async def final(message, state):
     data = await state.get_data()
-    contact = message.from_user.username or data['contact']
+    contact = message.from_user.username or data["contact"]
     try:
         await new_post(
             username=contact,
             user_id=str(message.from_user.id),
-            city=data['city'],
-            address=data['address'],
-            type=data['type'],
-            description=data['description'],
+            city=data["city"],
+            address=data["address"],
+            type=data["type"],
+            description=data["description"],
             date_in=data["check_in"],
             date_out=data["check_out"],
-            photos=data.get("photos", [])
+            photos=data.get("photos", []),
         )
 
         result = await get_active_sublets(flag="last_post")
         await show_post(message, result, is_admin=True)
-        buttons = [("Посмотреть или отредактировать мои объявления", "edit_post"),
-                   ("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start")]
+        buttons = [
+            ("Посмотреть или отредактировать мои объявления", "edit_post"),
+            ("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"),
+        ]
         markup = create_markup(buttons)
         await message.answer("Пост опубликован!!", reply_markup=markup)
     except Exception as e:
@@ -165,16 +187,18 @@ async def final(message, state):
 
 
 @router_add_post.message(
-    F.content_type.in_({
-        ContentType.PHOTO,
-        ContentType.TEXT,
-        ContentType.DOCUMENT,
-        ContentType.VIDEO,
-        ContentType.AUDIO,
-        ContentType.VOICE,
-        ContentType.STICKER,
-    }),
-    F.state.in_([OverallState.photos, OverallState.change_photos])
+    F.content_type.in_(
+        {
+            ContentType.PHOTO,
+            ContentType.TEXT,
+            ContentType.DOCUMENT,
+            ContentType.VIDEO,
+            ContentType.AUDIO,
+            ContentType.VOICE,
+            ContentType.STICKER,
+        }
+    ),
+    F.state.in_([OverallState.photos, OverallState.change_photos]),
 )
 async def not_photo_group(message):
     await message.answer("Нужно отправить фотографии альбомом. Попробуйте ещё раз")

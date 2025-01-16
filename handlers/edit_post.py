@@ -34,12 +34,18 @@ async def edit_post(message, state):
         buttons.append(("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"))
         markup = create_markup(buttons)
         if isinstance(message, CallbackQuery):
-            await message.message.edit_text("Какое объявление нужно отредактировать?", reply_markup=markup)
+            await message.message.edit_text(
+                "Какое объявление нужно отредактировать?", reply_markup=markup
+            )
         else:
-            await message.answer("Какое объявление нужно отредактировать?", reply_markup=markup)
+            await message.answer(
+                "Какое объявление нужно отредактировать?", reply_markup=markup
+            )
     else:
-        buttons = ([("Создать объявление", "add_post"),
-                    ("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start")])
+        buttons = [
+            ("Создать объявление", "add_post"),
+            ("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"),
+        ]
         markup = create_markup(buttons)
         await message.answer("У вас пока нет объявлений", reply_markup=markup)
 
@@ -47,16 +53,18 @@ async def edit_post(message, state):
 @router_edit.message(OverallState.edit)
 @router_edit.callback_query(F.data == "Назад")
 async def choose_edit_button(message):
-    buttons = [("⏻ Аквтивировать/Отключить пост ⏻", "Изменить статус"),
-               ("🛌 Изменить тип саблета 🛌", "Изменить тип саблета"),
-               ("📬 Изменить адрес 📬", "Изменить адрес"),
-               ("📝 Изменить описание 📝", "Изменить описание"),
-               ("📸 Изменить фотографии 📸", "Изменить фотографии"),
-               ("📅 Изменить даты 📅", "Изменить даты"),
-               ("📰 Посмотреть пост 📰", "Посмотреть пост"),
-               ("🗑️ Удалить пост 🗑️", "Удалить пост"),
-               ("⬇ Назад к моим объявлениям ⬇", "edit_post"),
-               ("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start")]
+    buttons = [
+        ("⏻ Аквтивировать/Отключить пост ⏻", "Изменить статус"),
+        ("🛌 Изменить тип саблета 🛌", "Изменить тип саблета"),
+        ("📬 Изменить адрес 📬", "Изменить адрес"),
+        ("📝 Изменить описание 📝", "Изменить описание"),
+        ("📸 Изменить фотографии 📸", "Изменить фотографии"),
+        ("📅 Изменить даты 📅", "Изменить даты"),
+        ("📰 Посмотреть пост 📰", "Посмотреть пост"),
+        ("🗑️ Удалить пост 🗑️", "Удалить пост"),
+        ("⬇ Назад к моим объявлениям ⬇", "edit_post"),
+        ("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"),
+    ]
     markup = create_markup(buttons)
 
     if isinstance(message, CallbackQuery):
@@ -73,15 +81,21 @@ async def change_type(message, state):
     my_type = await type_of_sublet(post_id)
     all_types.remove(my_type)
 
-    markup = create_markup([(f"Изменить на {all_types[0]}", f"Изменить на {all_types[0]}"),
-                            ("⬇ Назад ⬇", "Назад")])
+    markup = create_markup(
+        [
+            (f"Изменить на {all_types[0]}", f"Изменить на {all_types[0]}"),
+            ("⬇ Назад ⬇", "Назад"),
+        ]
+    )
     await message.message.edit_text(f"Сейчас выбран тип {my_type}", reply_markup=markup)
 
 
 @router_edit.callback_query(F.data.startswith("Изменить на"))
 async def change_type_final(message, state):
     post_id = (await state.get_data()).get("post_id", "")
-    await change_post(post_id=post_id, parameter_name="type", parameter=message.data.split()[2])
+    await change_post(
+        post_id=post_id, parameter_name="type", parameter=message.data.split()[2]
+    )
     await message.answer("Тип изменён!")
     await choose_edit_button(message)
 
@@ -96,15 +110,15 @@ async def change_status(message, state):
         buttons = [("Активировать объявление", "is_active_True")]
     buttons.append(("⬇ Назад ⬇", "Назад"))
     markup = create_markup(buttons)
-    await message.message.edit_text(f'Сейчас объявление {"Активировано" if my_type else "Отключено"}',
-                                    reply_markup=markup)
+    await message.message.edit_text(
+        f'Сейчас объявление {"Активировано" if my_type else "Отключено"}',
+        reply_markup=markup,
+    )
 
 
 @router_edit.callback_query(F.data.startswith("is_active_"))
 async def disable_ad(message, state):
-    print('tut')
     flag = message.data.split("_")[2]
-    print(flag)
     post_id = (await state.get_data()).get("post_id", "")
     if flag:
         await change_post(post_id=post_id, parameter_name="is_active", parameter=False)
@@ -113,14 +127,6 @@ async def disable_ad(message, state):
         await change_post(post_id=post_id, parameter_name="is_active", parameter=True)
         await message.message.edit_text("Объявление активировано!")
     await choose_edit_button(message)
-
-
-# @router_edit.callback_query(F.data.startswith("Активировать объявление"))
-# async def disable_ad(message, state):
-#     post_id = (await state.get_data()).get("post_id", "")
-#     await change_post(post_id=post_id, parameter_name="is_active", parameter=True)
-#     await message.message.edit_text("Объявление активировано!")
-#     await choose_edit_button(message)
 
 
 @router_edit.callback_query(F.data == "Изменить адрес")
@@ -148,14 +154,18 @@ async def change_description(message, state):
 async def edit_description(message, state):
     await state.update_data(new_description=message.text)
     post_id = (await state.get_data()).get("post_id", "")
-    await change_post(post_id=post_id, parameter_name='description', parameter=message.text)
+    await change_post(
+        post_id=post_id, parameter_name="description", parameter=message.text
+    )
     await message.answer("Описание изменено!")
     await choose_edit_button(message)
 
 
 @router_edit.callback_query(F.data == "Изменить фотографии")
 async def change_photos(message, state):
-    await message.message.edit_text("Залейте новые фото вместо старых (все сразу, максимум 8 штук)")
+    await message.message.edit_text(
+        "Залейте новые фото вместо старых (все сразу, максимум 8 штук)"
+    )
     await state.set_state(OverallState.change_photos)
     await state.update_data(photos=[])
     await handle_album_photo(message.message, state)
@@ -166,7 +176,9 @@ timers = {}
 MAX_PHOTOS = 8
 
 
-@router_edit.message(F.media_group_id, F.content_type == ContentType.PHOTO, OverallState.change_photos)
+@router_edit.message(
+    F.media_group_id, F.content_type == ContentType.PHOTO, OverallState.change_photos
+)
 async def handle_album_photo(message, state):
     group_id = message.media_group_id
 
@@ -176,7 +188,9 @@ async def handle_album_photo(message, state):
 
     if group_id in timers:
         timers[group_id].cancel()
-    timers[group_id] = asyncio.create_task(finalize_album(group_id, message.chat.id, state, message))
+    timers[group_id] = asyncio.create_task(
+        finalize_album(group_id, message.chat.id, state, message)
+    )
 
 
 async def finalize_album(group_id, chat_id, state, message):
@@ -200,10 +214,12 @@ async def see_post(message, state):
     result = await get_active_sublets(post_id=int(post_id), flag="my_post")
     await show_post(message, result)
 
-    buttons = [("➕ Создать новое объявление ➕", "add_post"),
-               ("⬇ Вернуться к этому объявлению ⬇", "Назад"),
-               ("⬇⬇ Посмотреть все мои объявления ⬇⬇", "edit_post"),
-               ("⬇⬇⬇ Вернуться в меню ⬇⬇⬇", "start")]
+    buttons = [
+        ("➕ Создать новое объявление ➕", "add_post"),
+        ("⬇ Вернуться к этому объявлению ⬇", "Назад"),
+        ("⬇⬇ Посмотреть все мои объявления ⬇⬇", "edit_post"),
+        ("⬇⬇⬇ Вернуться в меню ⬇⬇⬇", "start"),
+    ]
     markup = create_markup(buttons)
     await message.message.answer("Что дальше?", reply_markup=markup)
 
@@ -221,7 +237,10 @@ async def change_check_in(message, state):
     await state.update_data(stage="change_check_in")
     await message.message.answer(
         "Выберите дату заезда",
-        reply_markup=await DialogCalendar().start_calendar(year=datetime.now().year, month=datetime.now().month))
+        reply_markup=await DialogCalendar().start_calendar(
+            year=datetime.now().year, month=datetime.now().month
+        ),
+    )
 
 
 @router_edit.message(OverallState.change_dates)
@@ -229,7 +248,10 @@ async def change_check_out(message, state):
     await state.update_data(stage="change_check_out")
     await message.answer(
         "Выберите дату выезда",
-        reply_markup=await DialogCalendar().start_calendar(year=datetime.now().year, month=datetime.now().month))
+        reply_markup=await DialogCalendar().start_calendar(
+            year=datetime.now().year, month=datetime.now().month
+        ),
+    )
 
 
 @router_edit.callback_query(F.data.regexp(r"^\d+$"))
@@ -241,14 +263,18 @@ async def edit_post_callback(message, state):
 
 
 @router_edit.message(
-    F.content_type.in_({
-        ContentType.PHOTO,
-        ContentType.TEXT,
-        ContentType.DOCUMENT,
-        ContentType.VIDEO,
-        ContentType.AUDIO,
-        ContentType.VOICE,
-        ContentType.STICKER,
-    }), OverallState.change_photos)
+    F.content_type.in_(
+        {
+            ContentType.PHOTO,
+            ContentType.TEXT,
+            ContentType.DOCUMENT,
+            ContentType.VIDEO,
+            ContentType.AUDIO,
+            ContentType.VOICE,
+            ContentType.STICKER,
+        }
+    ),
+    OverallState.change_photos,
+)
 async def not_photo_group(message):
     await message.answer("Нужно отправить фотографии альбомом. Попробуйте ещё раз")

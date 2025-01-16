@@ -25,7 +25,7 @@ months_dict = {
     "Сентябрь": "09",
     "Октябрь": "10",
     "Ноябрь": "11",
-    "Декабрь": "12"
+    "Декабрь": "12",
 }
 
 
@@ -35,11 +35,13 @@ async def free(message, state):
     await state.set_state(OverallState.free_dates)
     await state.update_data(offset=0, limit=5)
 
-    buttons = [("📅 В конкретную дату 📅", "Дата"),
-               ("🏙️ Все объявления в городе 🏙️", "В городе"),
-               ("🔎 Все доступные в определенном месяце 🔎", "Месяц"),
-               ("🇮🇱 Все доступные саблеты во всех городах 🇮🇱", "Все сразу"),
-               ("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start")]
+    buttons = [
+        ("📅 В конкретную дату 📅", "Дата"),
+        ("🏙️ Все объявления в городе 🏙️", "В городе"),
+        ("🔎 Все доступные в определенном месяце 🔎", "Месяц"),
+        ("🇮🇱 Все доступные саблеты во всех городах 🇮🇱", "Все сразу"),
+        ("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"),
+    ]
     markup = create_markup(buttons)
     msg = "Выберите вариант"
 
@@ -62,7 +64,9 @@ async def show_variants(message, state):
         result = await get_active_sublets(flag="by_date", city=city, date=date)
 
     elif data["by_what"] == "Месяц":
-        result = await get_active_sublets(flag="by_month", city=city, year=data["year"], month=data["month"])
+        result = await get_active_sublets(
+            flag="by_month", city=city, year=data["year"], month=data["month"]
+        )
 
     elif data["by_what"] == "В городе":
         result = await get_active_sublets(flag="by_active", city=city)
@@ -100,15 +104,30 @@ async def date_callback(message, state):
 
     await message.message.answer(
         "Выберите дату заезда",
-        reply_markup=await DialogCalendar().start_calendar(year=datetime.now().year, month=datetime.now().month))
+        reply_markup=await DialogCalendar().start_calendar(
+            year=datetime.now().year, month=datetime.now().month
+        ),
+    )
 
 
 @router_free.callback_query(F.data == "Месяц")
 async def month_callback(message, state):
     await state.update_data(by_what="Месяц", command="free")
     buttons = []
-    months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
-              "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
+    months = [
+        "Январь",
+        "Февраль",
+        "Март",
+        "Апрель",
+        "Май",
+        "Июнь",
+        "Июль",
+        "Август",
+        "Сентябрь",
+        "Октябрь",
+        "Ноябрь",
+        "Декабрь",
+    ]
 
     for month in months:
         buttons.append((month, f"month_{month}"))
@@ -159,7 +178,9 @@ async def load_more_sublets(message, state):
     await state.update_data(offset=new_offset)
 
     if city != "No city":
-        result = await get_active_sublets(flag="by_active", city=city, offset=new_offset)
+        result = await get_active_sublets(
+            flag="by_active", city=city, offset=new_offset
+        )
     else:
         result = await get_active_sublets(flag="all_posts", offset=new_offset)
 
@@ -168,4 +189,6 @@ async def load_more_sublets(message, state):
     else:
         buttons = [("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start")]
         markup = create_markup(buttons)
-        await message.message.edit_text("Больше доступных объявлений нет ", reply_markup=markup)
+        await message.message.edit_text(
+            "Больше доступных объявлений нет ", reply_markup=markup
+        )

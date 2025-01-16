@@ -1,8 +1,13 @@
 from aiogram import Router, F
 from aiogram.types import Message, ContentType, InputMediaPhoto
 from datetime import datetime
-from aiogram_calendar import SimpleCalendar, SimpleCalendarCallback, DialogCalendar, DialogCalendarCallback, \
-    get_user_locale
+from aiogram_calendar import (
+    SimpleCalendar,
+    SimpleCalendarCallback,
+    DialogCalendar,
+    DialogCalendarCallback,
+    get_user_locale,
+)
 from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.filters.callback_data import CallbackData
@@ -18,27 +23,17 @@ router_test = Router()
 
 @router_test.message(Command("test"))
 async def test_photo(message):
-    result = await get_active_sublets(flag='last_post')
+    result = await get_active_sublets(flag="last_post")
     media = [
-        InputMediaPhoto(media=file_id, caption=result[0][0])
-        if idx == 0 else InputMediaPhoto(media=file_id)
+        (
+            InputMediaPhoto(media=file_id, caption=result[0][0])
+            if idx == 0
+            else InputMediaPhoto(media=file_id)
+        )
         for idx, file_id in enumerate(result[0][1])
     ]
     # media = [InputMediaPhoto(media=file_id) for file_id in result[0][1]]
     await message.answer_media_group(media)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # from datetime import datetime
@@ -89,33 +84,6 @@ async def test_photo(message):
 #         await message.answer_photo(photo)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # @router_test.message(Command("test"))
 # async def test_func(message, state):
 #     await dialog_check_in(message)
@@ -164,8 +132,6 @@ async def test_photo(message):
 #                 await dialog_check_out(callback_query.message, state)
 
 
-
-
 # @router_test.message(F.text.lower() == 'navigation calendar')
 # async def nav_cal_handler(message: Message):
 #     await message.answer(
@@ -210,6 +176,3 @@ async def test_photo(message):
 #     await message.answer(
 #         "Выберите дату заезда ",
 #         reply_markup=await DialogCalendar().start_calendar(2025))
-
-
-

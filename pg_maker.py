@@ -93,7 +93,7 @@ async def add_user(username, user_id):
 
 async def all_users_from_db():
     async with db_connection() as conn:
-        sql = '''SELECT username FROM public.users'''
+        sql = """SELECT username FROM public.users"""
         all_us = await conn.fetch(sql)
         all_users = [i for i in all_us]
         return all_users
@@ -107,7 +107,9 @@ async def delete_table():
         await create_users()
 
 
-async def new_post(username, user_id, city, address, type, date_in, date_out, description, photos):
+async def new_post(
+    username, user_id, city, address, type, date_in, date_out, description, photos
+):
     async with db_connection() as conn:
         await new_table()
 
@@ -128,7 +130,18 @@ async def new_post(username, user_id, city, address, type, date_in, date_out, de
         )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)"""
 
-        await conn.execute(sql, username, user_id, city, address, type, description, date_in, date_out, *photo_values)
+        await conn.execute(
+            sql,
+            username,
+            user_id,
+            city,
+            address,
+            type,
+            description,
+            date_in,
+            date_out,
+            *photo_values,
+        )
 
 
 async def delete_post(post_id):
@@ -216,10 +229,12 @@ async def update_photos(post_id, photos):
         await conn.execute(sql_update, *photo_values, post_id)
 
 
-async def get_active_sublets(flag='', city='', date='', year='', month='', post_id='', offset=0, limit=5):
+async def get_active_sublets(
+    flag="", city="", date="", year="", month="", post_id="", offset=0, limit=5
+):
     async with db_connection() as conn:
 
-        if flag == 'by_date':
+        if flag == "by_date":
             sql = """
                     SELECT username, city, date_in, date_out, type, address, description, 
                     photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8 
@@ -229,7 +244,7 @@ async def get_active_sublets(flag='', city='', date='', year='', month='', post_
                 """
             result = await conn.fetch(sql, city, date, date, limit, offset)
 
-        elif flag == 'by_month':
+        elif flag == "by_month":
             sql = f"""
                     SELECT username, city, date_in, date_out, type, address, description, 
                     photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8 
@@ -246,7 +261,7 @@ async def get_active_sublets(flag='', city='', date='', year='', month='', post_
                 """
             result = await conn.fetch(sql, city, limit, offset)
 
-        elif flag == 'by_active':
+        elif flag == "by_active":
             sql = """
                     SELECT username, city, date_in, date_out, type, address, description, 
                     photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8 
@@ -256,7 +271,7 @@ async def get_active_sublets(flag='', city='', date='', year='', month='', post_
                 """
             result = await conn.fetch(sql, city, limit, offset)
 
-        elif flag == 'all_posts':
+        elif flag == "all_posts":
             sql = f"""
                     SELECT username, city, date_in, date_out, type, address, description, 
                     photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8 
@@ -266,7 +281,7 @@ async def get_active_sublets(flag='', city='', date='', year='', month='', post_
                 """
             result = await conn.fetch(sql, limit, offset)
 
-        elif flag == 'last_post':
+        elif flag == "last_post":
             sql = """
                      SELECT username, city, date_in, date_out, type, address, description, 
                            photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8 
@@ -276,7 +291,7 @@ async def get_active_sublets(flag='', city='', date='', year='', month='', post_
                 """
             result = await conn.fetch(sql)
 
-        elif flag == 'my_post':
+        elif flag == "my_post":
             sql = """
                      SELECT username, city, date_in, date_out, type, address, description, 
                            photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8 
@@ -290,11 +305,15 @@ async def get_active_sublets(flag='', city='', date='', year='', month='', post_
     sublets = []
     for info_and_photos in all_info_and_photos:
         if info_and_photos:
-            username, city, date_in, date_out, type, address, description, *photos = info_and_photos
+            username, city, date_in, date_out, type, address, description, *photos = (
+                info_and_photos
+            )
             f_date_in = date_in.strftime("%d-%m-%Y")
             f_date_out = date_out.strftime("%d-%m-%Y")
-            user_info = f"🏠 Город: {city}\n🛌 Тип: {type}\n📬 Адрес: {address}\n" \
-                        f"📅 Свободные даты: \n{f_date_in} — {f_date_out}\n\n{description}\n\nОпубликовал: @{username}"
+            user_info = (
+                f"🏠 Город: {city}\n🛌 Тип: {type}\n📬 Адрес: {address}\n"
+                f"📅 Свободные даты: \n{f_date_in} — {f_date_out}\n\n{description}\n\nОпубликовал: @{username}"
+            )
             user_photos = [photo for photo in photos if photo is not None]
             sublet = (user_info, user_photos)
             sublets.append(sublet)

@@ -14,8 +14,11 @@ async def show_post(message, result, flag="", is_admin=False):
 
     try:
         media = [
-            InputMediaPhoto(media=file_id, caption=description)
-            if idx == 0 else InputMediaPhoto(media=file_id)
+            (
+                InputMediaPhoto(media=file_id, caption=description)
+                if idx == 0
+                else InputMediaPhoto(media=file_id)
+            )
             for idx, file_id in enumerate(photos)
         ]
         await message.answer_media_group(media)

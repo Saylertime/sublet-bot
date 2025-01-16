@@ -17,7 +17,7 @@ def create_markup_3_buttons(buttons):
     # Проходимся по кнопкам с шагом 2, чтобы группировать их по парам
     for i in range(0, len(buttons), 3):
         row = []
-        for text, callback_data in buttons[i:i+3]:
+        for text, callback_data in buttons[i : i + 3]:
             button = InlineKeyboardButton(text=text, callback_data=callback_data)
             row.append(button)
         inline_keyboard.append(row)

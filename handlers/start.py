@@ -14,9 +14,11 @@ async def start_message(message, state):
     await add_user(message.from_user.username, str(message.from_user.id))
     await state.clear()
 
-    buttons = [("🔎 Найти саблет 🔎", "free"),
-               ("➕ Добавить объявление ➕", "add_post"),
-               ("🖊 Отредактировать объявление 🖊", "edit_post")]
+    buttons = [
+        ("🔎 Найти саблет 🔎", "free"),
+        ("➕ Добавить объявление ➕", "add_post"),
+        ("🖊 Отредактировать объявление 🖊", "edit_post"),
+    ]
     markup = create_markup(buttons)
     msg = "⬇⬇⬇ Добро пожаловать в САБЛЕТ-БОТ ⬇⬇⬇"
 
