@@ -1,7 +1,8 @@
 from states.overall import OverallState
 from pg_maker import change_dates_pg
 from handlers.edit_post import change_check_out
-from handlers.add_post import check_out, handle_album_photo
+from handlers.add_post import check_out
+from handlers.photos import handle_album_photo
 from keyboards import all_cities, create_markup
 
 from aiogram import Router

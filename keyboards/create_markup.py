@@ -1,23 +1,12 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
-def create_markup(buttons):
-    """Создает кнопки для ответа"""
-    inline_keyboard = []
-    for text, callback_data in buttons:
-        button = InlineKeyboardButton(text=text, callback_data=callback_data)
-        inline_keyboard.append([button])
-    return InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
-
-
-def create_markup_3_buttons(buttons):
+def create_markup(buttons, columns=1):
     """Создает кнопки для ответа в две колонки"""
     inline_keyboard = []
-
-    # Проходимся по кнопкам с шагом 2, чтобы группировать их по парам
-    for i in range(0, len(buttons), 3):
+    for i in range(0, len(buttons), columns):
         row = []
-        for text, callback_data in buttons[i : i + 3]:
+        for text, callback_data in buttons[i : i + columns]:
             button = InlineKeyboardButton(text=text, callback_data=callback_data)
             row.append(button)
         inline_keyboard.append(row)

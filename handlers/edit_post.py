@@ -8,8 +8,9 @@ from pg_maker import (
     update_photos,
     get_active_sublets,
 )
+from handlers.photos import handle_album_photo
 from utils import show_post
-from keyboards import create_markup, create_markup_3_buttons
+from keyboards import create_markup
 from states.overall import OverallState
 import asyncio
 from datetime import datetime
@@ -28,16 +29,18 @@ router_edit = Router()
 @router_edit.callback_query(F.data.in_({"edit_post", "lexa"}))
 async def edit_post(event, state):
     await state.clear()
+    columns = 1
 
     buttons = await find_my_sublets(str(event.from_user.id))
     if isinstance(event, CallbackQuery):
         if event.data == "lexa":
             buttons = await find_all_sublets()
+            columns = 3
 
     if buttons:
         buttons = [(address, str(user_id)) for address, user_id in buttons]
         buttons.append(("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"))
-        markup = create_markup(buttons)
+        markup = create_markup(buttons, columns)
         msg = "Какое объявление нужно отредактировать?"
 
         if isinstance(event, CallbackQuery):
@@ -164,41 +167,41 @@ async def change_photos(callback, state):
     await handle_album_photo(callback.message, state)
 
 
-media_groups = {}
-timers = {}
-MAX_PHOTOS = 8
-
-
-@router_edit.message(
-    F.media_group_id, F.content_type == ContentType.PHOTO, OverallState.change_photos
-)
-async def handle_album_photo(message, state):
-    group_id = message.media_group_id
-
-    if group_id not in media_groups:
-        media_groups[group_id] = []
-    media_groups[group_id].append(message.photo[-1].file_id)
-
-    if group_id in timers:
-        timers[group_id].cancel()
-    timers[group_id] = asyncio.create_task(
-        finalize_album(group_id, message.chat.id, state, message)
-    )
-
-
-async def finalize_album(group_id, chat_id, state, message):
-    await asyncio.sleep(2)
-
-    post_id = (await state.get_data()).get("post_id", "")
-
-    if group_id in media_groups:
-        album = media_groups.pop(group_id)
-        timers.pop(group_id, None)
-
-        await state.update_data(photos=album)
-        await update_photos(int(post_id), album)
-        await message.answer(f"{len(album) if len(album) <=8 else 8} фото загружены!")
-        await choose_edit_button(message, state)
+# media_groups = {}
+# timers = {}
+# MAX_PHOTOS = 8
+#
+#
+# @router_edit.message(
+#     F.media_group_id, F.content_type == ContentType.PHOTO, OverallState.change_photos
+# )
+# async def handle_album_photo(message, state):
+#     group_id = message.media_group_id
+#
+#     if group_id not in media_groups:
+#         media_groups[group_id] = []
+#     media_groups[group_id].append(message.photo[-1].file_id)
+#
+#     if group_id in timers:
+#         timers[group_id].cancel()
+#     timers[group_id] = asyncio.create_task(
+#         finalize_album(group_id, message.chat.id, state, message)
+#     )
+#
+#
+# async def finalize_album(group_id, chat_id, state, message):
+#     await asyncio.sleep(2)
+#
+#     post_id = (await state.get_data()).get("post_id", "")
+#
+#     if group_id in media_groups:
+#         album = media_groups.pop(group_id)
+#         timers.pop(group_id, None)
+#
+#         await state.update_data(photos=album)
+#         await update_photos(int(post_id), album)
+#         await message.answer(f"{len(album) if len(album) <=8 else 8} фото загружены!")
+#         await choose_edit_button(message, state)
 
 
 @router_edit.callback_query(F.data == "Посмотреть пост")

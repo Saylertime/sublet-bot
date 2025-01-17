@@ -116,40 +116,40 @@ async def check_out(message, state, stage):
     )
 
 
-media_groups = {}
-timers = {}
-MAX_PHOTOS = 8
-
-
-@router_add_post.message(
-    F.media_group_id, F.content_type == ContentType.PHOTO, OverallState.photos
-)
-async def handle_album_photo(message, state):
-    group_id = message.media_group_id
-
-    if group_id not in media_groups:
-        media_groups[group_id] = []
-
-    media_groups[group_id].append(message.photo[-1].file_id)
-
-    if group_id in timers:
-        timers[group_id].cancel()
-
-    timers[group_id] = asyncio.create_task(
-        finalize_album(group_id, message.chat.id, state, message)
-    )
-
-
-async def finalize_album(group_id, chat_id, state, message):
-    await asyncio.sleep(2)
-
-    if group_id in media_groups:
-        album = media_groups.pop(group_id)
-        timers.pop(group_id, None)
-
-        await state.update_data(photos=album)
-        await message.answer(f"{len(album)} загружены!")
-        await final(message, state)
+# media_groups = {}
+# timers = {}
+# MAX_PHOTOS = 8
+#
+#
+# @router_add_post.message(
+#     F.media_group_id, F.content_type == ContentType.PHOTO, OverallState.photos
+# )
+# async def handle_album_photo(message, state):
+#     group_id = message.media_group_id
+#
+#     if group_id not in media_groups:
+#         media_groups[group_id] = []
+#
+#     media_groups[group_id].append(message.photo[-1].file_id)
+#
+#     if group_id in timers:
+#         timers[group_id].cancel()
+#
+#     timers[group_id] = asyncio.create_task(
+#         finalize_album(group_id, message.chat.id, state, message)
+#     )
+#
+#
+# async def finalize_album(group_id, chat_id, state, message):
+#     await asyncio.sleep(2)
+#
+#     if group_id in media_groups:
+#         album = media_groups.pop(group_id)
+#         timers.pop(group_id, None)
+#
+#         await state.update_data(photos=album)
+#         await message.answer(f"{len(album)} загружены!")
+#         await final(message, state)
 
 
 async def final(message, state):

@@ -5,6 +5,7 @@ from .edit_post import router_edit
 from .free import router_free
 from .start import router_start
 from .calendar import router_calendar
+from .photos import router_photos
 
 
 routers = [
@@ -14,5 +15,6 @@ routers = [
     router_edit,
     router_calendar,
     router_test,
+    router_photos,
     router_echo,
 ]
