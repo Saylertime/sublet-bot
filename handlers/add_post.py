@@ -112,8 +112,8 @@ async def check_in(message, state):
 
 
 @router_add_post.message(OverallState.check_out)
-async def check_out(message, state):
-    await state.update_data(stage="check_out")
+async def check_out(message, state, stage):
+    await state.update_data(stage=stage)
     await message.answer(
         "Выберите дату выезда",
         reply_markup=await DialogCalendar().start_calendar(
@@ -161,6 +161,8 @@ async def finalize_album(group_id, chat_id, state, message):
 async def final(message, state):
     data = await state.get_data()
     contact = message.from_user.username or data["contact"]
+    check_in_date = datetime.strptime(data["check_in"], "%Y-%m-%d")
+    check_out_date = datetime.strptime(data["check_out"], "%Y-%m-%d")
     try:
         await new_post(
             username=contact,
@@ -169,8 +171,8 @@ async def final(message, state):
             address=data["address"],
             type=data["type"],
             description=data["description"],
-            date_in=data["check_in"],
-            date_out=data["check_out"],
+            date_in=check_in_date,
+            date_out=check_out_date,
             photos=data.get("photos", []),
         )
 

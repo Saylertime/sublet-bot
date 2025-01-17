@@ -1,5 +1,6 @@
 from pg_maker import (
     find_my_sublets,
+    find_all_sublets,
     change_post,
     type_of_sublet,
     delete_post,
@@ -8,7 +9,7 @@ from pg_maker import (
     get_active_sublets,
 )
 from utils import show_post
-from keyboards import create_markup
+from keyboards import create_markup, create_markup_3_buttons
 from states.overall import OverallState
 import asyncio
 from datetime import datetime
@@ -27,34 +28,52 @@ router_edit = Router()
 @router_edit.callback_query(F.data == "edit_post")
 async def edit_post(message, state):
     await state.clear()
-    try:
-        buttons = await find_my_sublets(str(message.from_user.id))
+    buttons = await find_my_sublets(str(message.from_user.id))
 
-        if buttons:
-            buttons = [(address, str(user_id)) for address, user_id in buttons]
-            buttons.append(("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"))
-            markup = create_markup(buttons)
-            if isinstance(message, CallbackQuery):
-                await message.message.edit_text(
-                    "Какое объявление нужно отредактировать?", reply_markup=markup
-                )
-            else:
-                await message.answer(
-                    "Какое объявление нужно отредактировать?", reply_markup=markup
-                )
+    if buttons:
+        buttons = [(address, str(user_id)) for address, user_id in buttons]
+        buttons.append(("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"))
+        markup = create_markup(buttons)
+        if isinstance(message, CallbackQuery):
+            await message.message.edit_text(
+                "Какое объявление нужно отредактировать?", reply_markup=markup
+            )
         else:
-            buttons = [
-                ("Создать объявление", "add_post"),
-                ("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"),
-            ]
-            markup = create_markup(buttons)
-            msg = "У вас пока нет объявлений"
-            if isinstance(message, CallbackQuery):
-                await message.message.edit_text(msg, reply_markup=markup)
-            else:
-                await message.answer(msg, reply_markup=markup)
-    except Exception as e:
-        print(e)
+            await message.answer(
+                "Какое объявление нужно отредактировать?", reply_markup=markup
+            )
+    else:
+        buttons = [
+            ("Создать объявление", "add_post"),
+            ("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"),
+        ]
+        markup = create_markup(buttons)
+        msg = "У вас пока нет объявлений"
+        if isinstance(message, CallbackQuery):
+            await message.message.edit_text(msg, reply_markup=markup)
+        else:
+            await message.answer(msg, reply_markup=markup)
+
+
+@router_edit.callback_query(F.data == "lexa")
+async def edit_post_lexa(message, state):
+    await state.clear()
+    buttons = await find_all_sublets(str(message.from_user.id))
+
+    if buttons:
+        buttons = [(address, str(user_id)) for address, user_id in buttons]
+        buttons.append(("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"))
+        markup = create_markup_3_buttons(buttons)
+        await message.message.edit_text(
+            "Какое объявление нужно отредактировать?", reply_markup=markup
+        )
+    else:
+        buttons = [
+            ("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"),
+        ]
+        markup = create_markup(buttons)
+        msg = "Пусто =("
+        await message.message.edit_text(msg, reply_markup=markup)
 
 
 @router_edit.message(OverallState.edit)

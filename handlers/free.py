@@ -60,7 +60,7 @@ async def show_variants(message, state):
     result = ""
 
     if by_what.strip() == "Дата":
-        date = data["check_in"]
+        date = datetime.strptime(data["check_in"], "%Y-%m-%d")
         result = await get_active_sublets(flag="by_date", city=city, date=date)
 
     elif data["by_what"] == "Месяц":

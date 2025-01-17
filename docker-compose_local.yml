@@ -11,6 +11,7 @@ services:
       - webnet
     depends_on:
       - postgres
+      - redis
     volumes:
       - ./media:/telegram_bot/media
     environment:
@@ -37,5 +38,17 @@ services:
     networks:
       - webnet
 
+  redis:
+    image: redis:latest
+    container_name: sublet_redis
+    networks:
+      - webnet
+    command: ["redis-server", "--save", "", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+
 networks:
   webnet:
+
+volumes:
+  redis-data:

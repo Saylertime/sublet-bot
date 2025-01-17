@@ -159,6 +159,14 @@ async def find_my_sublets(user_id):
         return result
 
 
+async def find_all_sublets(user_id):
+    async with db_connection() as conn:
+        sql = """SELECT address, id 
+                 FROM public.sublets;"""
+        result = await conn.fetch(sql)
+        return result
+
+
 async def type_of_sublet(post_id):
     async with db_connection() as conn:
         sql = """SELECT type 
