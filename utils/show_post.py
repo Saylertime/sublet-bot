@@ -2,13 +2,12 @@ from aiogram.types import CallbackQuery, InputMediaPhoto
 from loader import bot
 from config_data import config
 
-
 admins = config.ADMINS
 
 
-async def show_post(message, result, flag="", is_admin=False):
-    if isinstance(message, CallbackQuery):
-        message = message.message
+async def show_post(event, result, flag="", is_admin=False):
+    if isinstance(event, CallbackQuery):
+        event = event.message
     description = result[0][0] if flag != "free" else result[0]
     photos = result[0][1] if flag != "free" else result[1]
 
@@ -21,20 +20,25 @@ async def show_post(message, result, flag="", is_admin=False):
             )
             for idx, file_id in enumerate(photos)
         ]
-        await message.answer_media_group(media)
+        await event.answer_media_group(media)
         if is_admin:
-            for admin in admins:
-                await bot.send_media_group(chat_id=admin, media=media)
+            await send_to_admins(description, media)
 
     except Exception as e:
         print(e)
         media = [InputMediaPhoto(media=file_id) for file_id in photos]
-        await message.answer_media_group(media)
-        await message.answer(description)
-        if is_admin:
-            for admin in admins:
-                await bot.send_media_group(chat_id=admin, media=media)
-                await bot.send_message(chat_id=admin, text=description)
+        await event.answer_media_group(media)
+        await event.answer(description)
+
+
+async def send_to_admins(description, media, is_admin=False):
+    for admin in admins:
+        try:
+            await bot.send_media_group(chat_id=admin, media=media)
+        except Exception as e:
+            await bot.send_media_group(chat_id=admin, media=media)
+            await bot.send_message(chat_id=admin, text=description)
+            await bot.send_message(chat_id=admin, text=str(e))
 
 
 # async def make_post(all_info_and_photos):

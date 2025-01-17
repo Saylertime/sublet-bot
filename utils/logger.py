@@ -4,7 +4,7 @@ logging.basicConfig(
     filename="bot.log",
     filemode="a",
     format="%(asctime)s - %(message)s",
-    datefmt="%m-%d %H:%M",
+    datefmt="%d-%m %H:%M",
     level=logging.WARNING,
 )
 

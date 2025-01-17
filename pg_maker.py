@@ -65,16 +65,6 @@ async def create_users():
         await conn.execute(sql)
 
 
-async def create_cities():
-    async with db_connection() as conn:
-        sql = """
-        CREATE TABLE IF NOT EXISTS public.cities (
-            city VARCHAR UNIQUE
-        );
-        """
-        await conn.execute(sql)
-
-
 async def add_user(username, user_id):
     async with db_connection() as conn:
         await create_users()
@@ -93,10 +83,13 @@ async def add_user(username, user_id):
 
 async def all_users_from_db():
     async with db_connection() as conn:
-        sql = """SELECT username FROM public.users"""
+        sql = """SELECT username, user_id FROM public.users"""
         all_us = await conn.fetch(sql)
-        all_users = [i for i in all_us]
-        return all_users
+        usernames = [
+            f"@{record['username']} — {record['user_id']}" for record in all_us
+        ]
+        formatted_usernames = "\n".join(usernames)
+        return formatted_usernames
 
 
 async def delete_table():
@@ -159,7 +152,7 @@ async def find_my_sublets(user_id):
         return result
 
 
-async def find_all_sublets(user_id):
+async def find_all_sublets():
     async with db_connection() as conn:
         sql = """SELECT address, id 
                  FROM public.sublets;"""

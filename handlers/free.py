@@ -31,7 +31,7 @@ months_dict = {
 
 @router_free.message(Command("free"))
 @router_free.callback_query(F.data == "free")
-async def free(message, state):
+async def free(event, state):
     await state.set_state(OverallState.free_dates)
     await state.update_data(offset=0, limit=5)
 
@@ -45,11 +45,11 @@ async def free(message, state):
     markup = create_markup(buttons)
     msg = "Выберите вариант"
 
-    if isinstance(message, CallbackQuery):
-        message = message.message
+    if isinstance(event, CallbackQuery):
+        message = event.message
         await message.edit_text(msg, reply_markup=markup)
     else:
-        await message.answer(msg, reply_markup=markup)
+        await event.answer(msg, reply_markup=markup)
 
 
 @router_free.message(OverallState.free_show)
@@ -93,16 +93,17 @@ async def send_sublets(result, message, state):
         msg = "В эту дату пока нет ничего доступного"
         try:
             await message.message.edit_text(msg, reply_markup=markup)
-        except:
+        except Exception as e:
+            print(e)
             await message.message.answer(msg, reply_markup=markup)
         await state.clear()
 
 
 @router_free.callback_query(F.data == "Дата")
-async def date_callback(message, state):
+async def date_callback(callback, state):
     await state.update_data(by_what="Дата", stage="finding", command="free")
 
-    await message.message.edit_text(
+    await callback.message.edit_text(
         "Выберите дату заезда",
         reply_markup=await DialogCalendar().start_calendar(
             year=datetime.now().year, month=datetime.now().month
@@ -111,7 +112,7 @@ async def date_callback(message, state):
 
 
 @router_free.callback_query(F.data == "Месяц")
-async def month_callback(message, state):
+async def month_callback(callback, state):
     await state.update_data(by_what="Месяц", command="free")
     buttons = []
     months = [
@@ -132,45 +133,45 @@ async def month_callback(message, state):
     for month in months:
         buttons.append((month, f"month_{month}"))
     markup = create_markup(buttons)
-    await message.message.edit_text("Выберите месяц:", reply_markup=markup)
+    await callback.message.edit_text("Выберите месяц:", reply_markup=markup)
 
 
 @router_free.callback_query(F.data == "В городе")
-async def city_callback(message, state):
+async def city_callback(callback, state):
     await state.update_data(by_what="В городе", command="free")
-    await all_cities(message)
+    await all_cities(callback)
 
 
 @router_free.callback_query(F.data == "Все сразу")
-async def city_callback(message, state):
+async def city_callback(callback, state):
     await state.update_data(by_what="Все сразу", all=True)
     result = await get_active_sublets(flag="all_posts")
     if result:
-        await send_sublets(result, message, state)
+        await send_sublets(result, callback, state)
 
 
 @router_free.callback_query(F.data.startswith("month_"))
-async def startswith_month(message, state):
-    month = message.data.split("_")[1] if message.data.startswith("month_") else None
+async def startswith_month(callback, state):
+    month = callback.data.split("_")[1] if callback.data.startswith("month_") else None
     await state.update_data(month=int(months_dict[month]), command="free")
     buttons = []
     years = [str(year) for year in range(2025, 2028)]
     for year in years:
         buttons.append((year, f"year_{year}"))
     markup = create_markup(buttons)
-    await message.message.edit_text(f"Выберите год:", reply_markup=markup)
+    await callback.message.edit_text(f"Выберите год:", reply_markup=markup)
 
 
 @router_free.callback_query(F.data.startswith("year_"))
-async def startswith_year(message, state):
-    year = message.data.split("_")[1] if message.data.startswith("year_") else None
+async def startswith_year(callback, state):
+    year = callback.data.split("_")[1] if callback.data.startswith("year_") else None
     await state.update_data(year=year)
-    await all_cities(message)
+    await all_cities(callback)
 
 
 @router_free.callback_query(F.data.startswith("load_more_"))
-async def load_more_sublets(message, state):
-    city = message.data.split("_")[2]
+async def load_more_sublets(callback, state):
+    city = callback.data.split("_")[2]
     data = await state.get_data()
 
     offset = data.get("offset", 5)
@@ -185,10 +186,10 @@ async def load_more_sublets(message, state):
         result = await get_active_sublets(flag="all_posts", offset=new_offset)
 
     if result:
-        await send_sublets(result, message, state)
+        await send_sublets(result, callback, state)
     else:
         buttons = [("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start")]
         markup = create_markup(buttons)
-        await message.message.edit_text(
+        await callback.message.edit_text(
             "Больше доступных объявлений нет ", reply_markup=markup
         )

@@ -1,6 +1,7 @@
 .PHONY: up down
 
 CURRENT_HOSTNAME := $(shell hostname)
+pass := $(shell grep ^POSTGRES_PASSWORD= .env | cut -d '=' -f 2)
 
 ifeq ($(CURRENT_HOSTNAME), 1738991-cy22118.twc1.net)
     COMPOSE_FILE = docker-compose_prod.yml
@@ -16,6 +17,9 @@ build:
 
 down:
 	docker-compose -f $(COMPOSE_FILE) down
+
+bash:
+	docker exec -it sublet_bot bash
 
 pg_bash:
 	docker exec -it sublet_postgres /bin/sh -c "psql -h postgres -U sayler -d postgres"

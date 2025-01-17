@@ -25,23 +25,25 @@ router_edit = Router()
 
 
 @router_edit.message(Command("edit_post"))
-@router_edit.callback_query(F.data == "edit_post")
-async def edit_post(message, state):
+@router_edit.callback_query(F.data.in_({"edit_post", "lexa"}))
+async def edit_post(event, state):
     await state.clear()
-    buttons = await find_my_sublets(str(message.from_user.id))
+
+    buttons = await find_my_sublets(str(event.from_user.id))
+    if isinstance(event, CallbackQuery):
+        if event.data == "lexa":
+            buttons = await find_all_sublets()
 
     if buttons:
         buttons = [(address, str(user_id)) for address, user_id in buttons]
         buttons.append(("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"))
         markup = create_markup(buttons)
-        if isinstance(message, CallbackQuery):
-            await message.message.edit_text(
-                "Какое объявление нужно отредактировать?", reply_markup=markup
-            )
+        msg = "Какое объявление нужно отредактировать?"
+
+        if isinstance(event, CallbackQuery):
+            await event.message.edit_text(msg, reply_markup=markup)
         else:
-            await message.answer(
-                "Какое объявление нужно отредактировать?", reply_markup=markup
-            )
+            await event.answer(msg, reply_markup=markup)
     else:
         buttons = [
             ("Создать объявление", "add_post"),
@@ -49,42 +51,23 @@ async def edit_post(message, state):
         ]
         markup = create_markup(buttons)
         msg = "У вас пока нет объявлений"
-        if isinstance(message, CallbackQuery):
-            await message.message.edit_text(msg, reply_markup=markup)
+        if isinstance(event, CallbackQuery):
+            await event.message.edit_text(msg, reply_markup=markup)
         else:
-            await message.answer(msg, reply_markup=markup)
-
-
-@router_edit.callback_query(F.data == "lexa")
-async def edit_post_lexa(message, state):
-    await state.clear()
-    buttons = await find_all_sublets(str(message.from_user.id))
-
-    if buttons:
-        buttons = [(address, str(user_id)) for address, user_id in buttons]
-        buttons.append(("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"))
-        markup = create_markup_3_buttons(buttons)
-        await message.message.edit_text(
-            "Какое объявление нужно отредактировать?", reply_markup=markup
-        )
-    else:
-        buttons = [
-            ("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"),
-        ]
-        markup = create_markup(buttons)
-        msg = "Пусто =("
-        await message.message.edit_text(msg, reply_markup=markup)
+            await event.answer(msg, reply_markup=markup)
 
 
 @router_edit.message(OverallState.edit)
 @router_edit.callback_query(F.data == "Назад")
-async def choose_edit_button(message, state):
+async def choose_edit_button(event, state):
     post_id = (await state.get_data()).get("post_id", "")
     is_active = await status_of_sublet(post_id)
 
     buttons = [
-        (f"⏻ {'Отключить пост' if is_active else 'Активировать пост'} ⏻",
-         f"{'is_active_False' if is_active else 'is_active_True'}"),
+        (
+            f"⏻ {'Отключить пост' if is_active else 'Активировать пост'} ⏻",
+            f"{'is_active_False' if is_active else 'is_active_True'}",
+        ),
         ("🛌 Изменить тип саблета 🛌", "Изменить тип саблета"),
         ("📬 Изменить адрес 📬", "Изменить адрес"),
         ("📝 Изменить описание 📝", "Изменить описание"),
@@ -97,15 +80,15 @@ async def choose_edit_button(message, state):
     ]
     markup = create_markup(buttons)
 
-    if isinstance(message, CallbackQuery):
-        await message.message.edit_text("Что хотите изменить?", reply_markup=markup)
+    if isinstance(event, CallbackQuery):
+        await event.message.edit_text("Что хотите изменить?", reply_markup=markup)
     else:
-        await message.answer("Что хотите изменить?", reply_markup=markup)
+        await event.answer("Что хотите изменить?", reply_markup=markup)
 
 
 @router_edit.callback_query(F.data == "Изменить тип саблета")
 @router_edit.message(OverallState.change_type)
-async def change_type(message, state):
+async def change_type(event, state):
     all_types = ["Квартира", "Комната"]
     post_id = (await state.get_data()).get("post_id", "")
     my_type = await type_of_sublet(post_id)
@@ -117,31 +100,31 @@ async def change_type(message, state):
             ("⬇ Назад ⬇", "Назад"),
         ]
     )
-    await message.message.edit_text(f"Сейчас выбран тип {my_type}", reply_markup=markup)
+    await event.message.edit_text(f"Сейчас выбран тип {my_type}", reply_markup=markup)
 
 
 @router_edit.callback_query(F.data.startswith("Изменить на"))
-async def change_type_final(message, state):
+async def change_type_final(callback, state):
     post_id = (await state.get_data()).get("post_id", "")
     await change_post(
-        post_id=post_id, parameter_name="type", parameter=message.data.split()[2]
+        post_id=post_id, parameter_name="type", parameter=callback.data.split()[2]
     )
-    await message.answer("Тип изменён!")
-    await choose_edit_button(message, state)
+    await callback.answer("Тип изменён!")
+    await choose_edit_button(callback, state)
 
 
 @router_edit.callback_query(F.data.startswith("is_active_"))
-async def disable_ad(message, state):
-    flag = message.data.split("_")[2]
+async def disable_ad(callback, state):
+    flag = callback.data.split("_")[2]
     is_active = flag == "True"
     post_id = (await state.get_data()).get("post_id", "")
     await change_post(post_id=post_id, parameter_name="is_active", parameter=is_active)
-    await choose_edit_button(message, state)
+    await choose_edit_button(callback, state)
 
 
 @router_edit.callback_query(F.data == "Изменить адрес")
-async def change_address(message, state):
-    await message.message.edit_text("Напишите новый адрес")
+async def change_address(callback, state):
+    await callback.message.edit_text("Напишите новый адрес")
     await state.set_state(OverallState.edit_address)
 
 
@@ -155,8 +138,8 @@ async def edit_address(message, state):
 
 
 @router_edit.callback_query(F.data == "Изменить описание")
-async def change_description(message, state):
-    await message.message.edit_text("Введите новое описание")
+async def change_description(event, state):
+    await event.message.edit_text("Введите новое описание")
     await state.set_state(OverallState.edit_description)
 
 
@@ -172,13 +155,13 @@ async def edit_description(message, state):
 
 
 @router_edit.callback_query(F.data == "Изменить фотографии")
-async def change_photos(message, state):
-    await message.message.edit_text(
+async def change_photos(callback, state):
+    await callback.message.edit_text(
         "Залейте новые фото вместо старых (все сразу, максимум 8 штук)"
     )
     await state.set_state(OverallState.change_photos)
     await state.update_data(photos=[])
-    await handle_album_photo(message.message, state)
+    await handle_album_photo(callback.message, state)
 
 
 media_groups = {}
@@ -219,10 +202,10 @@ async def finalize_album(group_id, chat_id, state, message):
 
 
 @router_edit.callback_query(F.data == "Посмотреть пост")
-async def see_post(message, state):
+async def see_post(callback, state):
     post_id = (await state.get_data()).get("post_id", "")
     result = await get_active_sublets(post_id=int(post_id), flag="my_post")
-    await show_post(message, result)
+    await show_post(callback, result)
 
     buttons = [
         ("➕ Создать новое объявление ➕", "add_post"),
@@ -231,21 +214,21 @@ async def see_post(message, state):
         ("⬇⬇⬇ Вернуться в меню ⬇⬇⬇", "start"),
     ]
     markup = create_markup(buttons)
-    await message.message.answer("Что дальше?", reply_markup=markup)
+    await callback.message.answer("Что дальше?", reply_markup=markup)
 
 
 @router_edit.callback_query(F.data == "Удалить пост")
-async def delete_post_from_db(message, state):
+async def delete_post_from_db(callback, state):
     post_id = (await state.get_data()).get("post_id", "")
     await delete_post(int(post_id))
-    await message.message.edit_text("Объявление удалено!")
-    await edit_post(message, state)
+    await callback.message.edit_text("Объявление удалено!")
+    await edit_post(callback, state)
 
 
 @router_edit.callback_query(F.data == "Изменить даты")
-async def change_check_in(message, state):
+async def change_check_in(callback, state):
     await state.update_data(stage="change_check_in")
-    await message.message.edit_text(
+    await callback.message.edit_text(
         "Выберите дату заезда",
         reply_markup=await DialogCalendar().start_calendar(
             year=datetime.now().year, month=datetime.now().month
@@ -265,11 +248,11 @@ async def change_check_out(message, state):
 
 
 @router_edit.callback_query(F.data.regexp(r"^\d+$"))
-async def edit_post_callback(message, state):
-    post_id = message.data
+async def edit_post_callback(callback, state):
+    post_id = callback.data
     await state.update_data(post_id=post_id)
     await state.set_state(OverallState.edit)
-    await choose_edit_button(message, state)
+    await choose_edit_button(callback, state)
 
 
 @router_edit.message(

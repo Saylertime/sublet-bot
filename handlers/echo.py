@@ -1,8 +1,7 @@
 import aiofiles
 from aiogram import Router, F
 
-from config_data import config
-
+from pg_maker import all_users_from_db
 
 router_echo = Router()
 
@@ -18,9 +17,13 @@ async def history_log(message):
         await message.answer(f"{msg}")
 
 
-@router_echo.message(F.text.startswith("ГОРОДА"))
-async def add_city(message):
-    await message.answer("\n".join(config.CITIES))
+@router_echo.message(F.text == "ВСЕ")
+async def all_users(message):
+    try:
+        usernames = await all_users_from_db()
+        await message.answer(str(usernames))
+    except Exception as e:
+        print(e)
 
 
 @router_echo.message(~F.text.startswith("/"))
