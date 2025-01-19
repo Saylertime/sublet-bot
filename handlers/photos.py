@@ -87,7 +87,6 @@ async def finalize_album(group_id, chat_id, state, message):
 )
 async def not_photo_group(message, state):
     current_state = await state.get_state()
-    print(current_state)
     if (
             current_state == OverallState.photos.state
             or current_state == OverallState.change_photos.state

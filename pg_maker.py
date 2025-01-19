@@ -312,7 +312,7 @@ async def get_active_sublets(
             f_date_in = date_in.strftime("%d-%m-%Y")
             f_date_out = date_out.strftime("%d-%m-%Y")
             user_info = (
-                f"🏠 Город: {city}\n🛌 Тип: {type}\n📬 Адрес: {address}\n"
+                f"🏠 Город: {city}\n🛌 Тип: {type}\n📬 Адрес: {address or 'Не указан'}\n"
                 f"📅 Свободные даты: \n{f_date_in} — {f_date_out}\n\n{description}\n\nОпубликовал: @{username}"
             )
             user_photos = [photo for photo in photos if photo is not None]

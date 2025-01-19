@@ -36,7 +36,7 @@ async def edit_post(event, state):
             columns = 3
 
     if buttons:
-        buttons = [(address, str(user_id)) for address, user_id in buttons]
+        buttons = [(address or "Адрес не указан", str(user_id)) for address, user_id in buttons]
         buttons.append(("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"))
         markup = create_markup(buttons, columns)
         msg = "Какое объявление нужно отредактировать?"

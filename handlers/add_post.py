@@ -8,7 +8,7 @@ from config_data import config
 
 from aiogram import Router, F
 from aiogram.filters import Command
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, ContentType
 from aiogram_calendar import DialogCalendar
 
 router_add_post = Router()
@@ -78,7 +78,7 @@ async def address(message, state):
     await message.message.edit_text("Напишите адрес: ")
 
 
-@router_add_post.message(OverallState.description)
+@router_add_post.message(F.content_type == ContentType.TEXT, OverallState.description)
 async def description(message, state):
     await state.update_data(address=message.text)
     await message.answer(
