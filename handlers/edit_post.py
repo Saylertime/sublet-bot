@@ -5,20 +5,18 @@ from pg_maker import (
     type_of_sublet,
     delete_post,
     status_of_sublet,
-    update_photos,
     get_active_sublets,
 )
 from handlers.photos import handle_album_photo
 from utils import show_post
 from keyboards import create_markup
 from states.overall import OverallState
-import asyncio
 from datetime import datetime
 
 
 from aiogram import Router, F
 from aiogram.filters import Command
-from aiogram.types import CallbackQuery, ContentType
+from aiogram.types import CallbackQuery
 from aiogram_calendar import DialogCalendar
 
 
@@ -167,43 +165,6 @@ async def change_photos(callback, state):
     await handle_album_photo(callback.message, state)
 
 
-# media_groups = {}
-# timers = {}
-# MAX_PHOTOS = 8
-#
-#
-# @router_edit.message(
-#     F.media_group_id, F.content_type == ContentType.PHOTO, OverallState.change_photos
-# )
-# async def handle_album_photo(message, state):
-#     group_id = message.media_group_id
-#
-#     if group_id not in media_groups:
-#         media_groups[group_id] = []
-#     media_groups[group_id].append(message.photo[-1].file_id)
-#
-#     if group_id in timers:
-#         timers[group_id].cancel()
-#     timers[group_id] = asyncio.create_task(
-#         finalize_album(group_id, message.chat.id, state, message)
-#     )
-#
-#
-# async def finalize_album(group_id, chat_id, state, message):
-#     await asyncio.sleep(2)
-#
-#     post_id = (await state.get_data()).get("post_id", "")
-#
-#     if group_id in media_groups:
-#         album = media_groups.pop(group_id)
-#         timers.pop(group_id, None)
-#
-#         await state.update_data(photos=album)
-#         await update_photos(int(post_id), album)
-#         await message.answer(f"{len(album) if len(album) <=8 else 8} фото загружены!")
-#         await choose_edit_button(message, state)
-
-
 @router_edit.callback_query(F.data == "Посмотреть пост")
 async def see_post(callback, state):
     post_id = (await state.get_data()).get("post_id", "")
@@ -256,21 +217,3 @@ async def edit_post_callback(callback, state):
     await state.update_data(post_id=post_id)
     await state.set_state(OverallState.edit)
     await choose_edit_button(callback, state)
-
-
-@router_edit.message(
-    F.content_type.in_(
-        {
-            ContentType.PHOTO,
-            ContentType.TEXT,
-            ContentType.DOCUMENT,
-            ContentType.VIDEO,
-            ContentType.AUDIO,
-            ContentType.VOICE,
-            ContentType.STICKER,
-        }
-    ),
-    OverallState.change_photos,
-)
-async def not_photo_group(message):
-    await message.answer("Нужно отправить фотографии альбомом. Попробуйте ещё раз")

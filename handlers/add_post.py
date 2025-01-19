@@ -2,14 +2,13 @@ from states.overall import OverallState
 from pg_maker import new_post, get_active_sublets
 from handlers.free import show_variants
 from utils import show_post
-import asyncio
 from datetime import datetime
 from keyboards import all_cities, create_markup
 from config_data import config
 
 from aiogram import Router, F
 from aiogram.filters import Command
-from aiogram.types import CallbackQuery, ContentType
+from aiogram.types import CallbackQuery
 from aiogram_calendar import DialogCalendar
 
 router_add_post = Router()
@@ -62,7 +61,7 @@ async def type_of_sublet(message, state):
         ),
         ("Комната", "Тип Комната"),
     ]
-    markup = create_markup(buttons)
+    markup = create_markup(buttons, columns=2)
     await message.edit_text("Выберите тип саблета: ", reply_markup=markup)
 
 
@@ -116,42 +115,6 @@ async def check_out(message, state, stage):
     )
 
 
-# media_groups = {}
-# timers = {}
-# MAX_PHOTOS = 8
-#
-#
-# @router_add_post.message(
-#     F.media_group_id, F.content_type == ContentType.PHOTO, OverallState.photos
-# )
-# async def handle_album_photo(message, state):
-#     group_id = message.media_group_id
-#
-#     if group_id not in media_groups:
-#         media_groups[group_id] = []
-#
-#     media_groups[group_id].append(message.photo[-1].file_id)
-#
-#     if group_id in timers:
-#         timers[group_id].cancel()
-#
-#     timers[group_id] = asyncio.create_task(
-#         finalize_album(group_id, message.chat.id, state, message)
-#     )
-#
-#
-# async def finalize_album(group_id, chat_id, state, message):
-#     await asyncio.sleep(2)
-#
-#     if group_id in media_groups:
-#         album = media_groups.pop(group_id)
-#         timers.pop(group_id, None)
-#
-#         await state.update_data(photos=album)
-#         await message.answer(f"{len(album)} загружены!")
-#         await final(message, state)
-
-
 async def final(message, state):
     data = await state.get_data()
     contact = message.from_user.username or data["contact"]
@@ -178,21 +141,4 @@ async def final(message, state):
     ]
     markup = create_markup(buttons)
     await message.answer("Пост опубликован!!", reply_markup=markup)
-
-
-@router_add_post.message(
-    F.content_type.in_(
-        {
-            ContentType.PHOTO,
-            ContentType.TEXT,
-            ContentType.DOCUMENT,
-            ContentType.VIDEO,
-            ContentType.AUDIO,
-            ContentType.VOICE,
-            ContentType.STICKER,
-        }
-    ),
-    F.state.in_([OverallState.photos, OverallState.change_photos]),
-)
-async def not_photo_group(message):
-    await message.answer("Нужно отправить фотографии альбомом. Попробуйте ещё раз")
+    await state.clear()
