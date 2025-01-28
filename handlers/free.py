@@ -3,7 +3,7 @@ from keyboards import all_cities, create_markup
 from datetime import datetime
 
 from pg_maker import get_active_sublets
-from utils import show_post
+from utils import show_post, make_post
 
 from aiogram import Router, F
 from aiogram.filters import Command
@@ -57,25 +57,28 @@ async def show_variants(message, state):
     data = await state.get_data()
     city = data["city"]
     by_what = data["by_what"]
-    result = ""
+    all_info_and_photos = ""
 
     if by_what.strip() == "Дата":
         date = datetime.strptime(data["check_in"], "%Y-%m-%d")
-        result = await get_active_sublets(flag="by_date", city=city, date=date)
+        all_info_and_photos = await get_active_sublets(
+            flag="by_date", city=city, date=date
+        )
 
     elif data["by_what"] == "Месяц":
-        result = await get_active_sublets(
+        all_info_and_photos = await get_active_sublets(
             flag="by_month", city=city, year=data["year"], month=data["month"]
         )
 
     elif data["by_what"] == "В городе":
-        result = await get_active_sublets(flag="by_active", city=city)
+        all_info_and_photos = await get_active_sublets(flag="by_active", city=city)
 
-    await send_sublets(result, message, state)
+    await send_sublets(all_info_and_photos, message, state)
 
 
-async def send_sublets(result, message, state):
-    if result:
+async def send_sublets(all_info_and_photos, message, state):
+    if all_info_and_photos:
+        result = await make_post(all_info_and_photos)
 
         for res in result:
             await show_post(message, result=res, flag="free")
@@ -115,22 +118,8 @@ async def date_callback(callback, state):
 async def month_callback(callback, state):
     await state.update_data(by_what="Месяц", command="free")
     buttons = []
-    months = [
-        "Январь",
-        "Февраль",
-        "Март",
-        "Апрель",
-        "Май",
-        "Июнь",
-        "Июль",
-        "Август",
-        "Сентябрь",
-        "Октябрь",
-        "Ноябрь",
-        "Декабрь",
-    ]
 
-    for month in months:
+    for month in months_dict.keys():
         buttons.append((month, f"month_{month}"))
     markup = create_markup(buttons)
     await callback.message.edit_text("Выберите месяц:", reply_markup=markup)

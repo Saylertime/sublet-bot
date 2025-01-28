@@ -41,16 +41,20 @@ async def send_to_admins(description, media, is_admin=False):
             await bot.send_message(chat_id=admin, text=str(e))
 
 
-# async def make_post(all_info_and_photos):
-#     sublets = []
-#     for info_and_photos in all_info_and_photos:
-#         if info_and_photos:
-#             username, city, date_in, date_out, type, address, description, *photos = info_and_photos
-#             f_date_in = date_in.strftime("%d-%m-%Y")
-#             f_date_out = date_out.strftime("%d-%m-%Y")
-#             user_info = f"🏠 Город: {city}\n🛌 Тип: {type}\n📬 Адрес: {address}\n" \
-#                         f"📅 Свободные даты: \n{f_date_in} — {f_date_out}\n\n{description}\n\nОпубликовал: @{username}"
-#             user_photos = [photo for photo in photos if photo is not None]
-#             sublet = (user_info, user_photos)
-#             sublets.append(sublet)
-#     return sublets
+async def make_post(all_info_and_photos):
+    sublets = []
+    for info_and_photos in all_info_and_photos:
+        if info_and_photos:
+            username, city, date_in, date_out, type, address, description, *photos = (
+                info_and_photos
+            )
+            f_date_in = date_in.strftime("%d-%m-%Y")
+            f_date_out = date_out.strftime("%d-%m-%Y")
+            user_info = (
+                f"🏠 Город: {city}\n🛌 Тип: {type}\n📬 Адрес: {address}\n"
+                f"📅 Свободные даты: \n{f_date_in} — {f_date_out}\n\n{description}\n\nОпубликовал: @{username}"
+            )
+            user_photos = [photo for photo in photos if photo is not None]
+            sublet = (user_info, user_photos)
+            sublets.append(sublet)
+    return sublets

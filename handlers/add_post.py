@@ -1,7 +1,7 @@
 from states.overall import OverallState
 from pg_maker import new_post, get_active_sublets
 from handlers.free import show_variants
-from utils import show_post
+from utils import show_post, make_post
 from datetime import datetime
 from keyboards import all_cities, create_markup
 from config_data import config
@@ -133,7 +133,9 @@ async def final(message, state):
         photos=data.get("photos", []),
     )
 
-    result = await get_active_sublets(flag="last_post")
+    all_info_and_photos = await get_active_sublets(flag="last_post")
+    result = await make_post(all_info_and_photos)
+
     await show_post(message, result, is_admin=True)
     buttons = [
         ("Посмотреть или отредактировать мои объявления", "edit_post"),

@@ -83,12 +83,15 @@ async def finalize_album(group_id, chat_id, state, message):
             ContentType.VOICE,
             ContentType.STICKER,
         }
-    ), StateFilter(OverallState.change_photos, OverallState.photos)
+    ),
+    StateFilter(OverallState.change_photos, OverallState.photos),
 )
 async def not_photo_group(message, state):
     current_state = await state.get_state()
     if (
-            current_state == OverallState.photos.state
-            or current_state == OverallState.change_photos.state
+        current_state == OverallState.photos.state
+        or current_state == OverallState.change_photos.state
     ):
-        await message.reply("Нужно отправить фотографии альбомом (минимум 2 штуки и максимум 8. Попробуйте ещё раз")
+        await message.reply(
+            "Нужно отправить фотографии альбомом (минимум 2 штуки и максимум 8. Попробуйте ещё раз"
+        )

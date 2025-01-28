@@ -8,7 +8,7 @@ from pg_maker import (
     get_active_sublets,
 )
 from handlers.photos import handle_album_photo
-from utils import show_post
+from utils import show_post, make_post
 from keyboards import create_markup
 from states.overall import OverallState
 from datetime import datetime
@@ -36,7 +36,9 @@ async def edit_post(event, state):
             columns = 3
 
     if buttons:
-        buttons = [(address or "Адрес не указан", str(user_id)) for address, user_id in buttons]
+        buttons = [
+            (address or "Адрес не указан", str(user_id)) for address, user_id in buttons
+        ]
         buttons.append(("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"))
         markup = create_markup(buttons, columns)
         msg = "Какое объявление нужно отредактировать?"
@@ -168,7 +170,9 @@ async def change_photos(callback, state):
 @router_edit.callback_query(F.data == "Посмотреть пост")
 async def see_post(callback, state):
     post_id = (await state.get_data()).get("post_id", "")
-    result = await get_active_sublets(post_id=int(post_id), flag="my_post")
+    all_info_and_photos = await get_active_sublets(post_id=int(post_id), flag="my_post")
+    result = await make_post(all_info_and_photos)
+
     await show_post(callback, result)
 
     buttons = [
