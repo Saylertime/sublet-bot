@@ -29,3 +29,5 @@ class OverallState(StatesGroup):
     free_dates = State()
     free_show = State()
     variants_show = State()
+
+    notifications = State()

@@ -47,3 +47,12 @@ def create_markup_with_url_2_rows(buttons):
             row = []  # Очищаем строку для следующей итерации
 
     return InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
+
+
+async def make_buttons(event):
+    buttons = [
+        ("⬇ Посмотреть все мои объявления ⬇", "edit_post"),
+        ("⬇⬇ Вернуться в меню ⬇⬇", "start"),
+    ]
+    markup = create_markup(buttons)
+    await event.message.answer("Что дальше?", reply_markup=markup)

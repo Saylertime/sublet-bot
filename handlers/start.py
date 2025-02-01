@@ -19,6 +19,7 @@ async def start_message(event, state):
     buttons = [
         ("🔎 Найти саблет 🔎", "free"),
         ("➕ Добавить объявление ➕", "add_post"),
+        ("📩 Настроить уведомления 📩", "notifications"),
         ("🖊 Отредактировать объявление 🖊", "edit_post"),
     ]
     if str(event.from_user.id) in admins:

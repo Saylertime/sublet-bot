@@ -26,6 +26,13 @@ async def set_commands():
     await bot.set_my_commands(commands, scope=BotCommandScopeDefault())
 
 
+def routers_and_middleware():
+    for router in routers:
+        dp.include_router(router)
+    dp.message.middleware(LoggingMiddleware())
+    dp.callback_query.middleware(LoggingMiddleware())
+
+
 async def on_startup() -> None:
     await set_commands()
     await bot.set_webhook(f"{BASE_URL}{WEBHOOK_PATH}")
@@ -39,33 +46,21 @@ async def on_shutdown() -> None:
 
 
 def main_webhook() -> None:
-    for router in routers:
-        dp.include_router(router)
 
-    dp.message.middleware(LoggingMiddleware())
-    dp.callback_query.middleware(LoggingMiddleware())
-
+    routers_and_middleware()
     dp.startup.register(on_startup)
-
     dp.shutdown.register(on_shutdown)
 
     app = web.Application()
-
     webhook_requests_handler = SimpleRequestHandler(dispatcher=dp, bot=bot)
     webhook_requests_handler.register(app, path=WEBHOOK_PATH)
-
     setup_application(app, dp, bot=bot)
-
     web.run_app(app, host=HOST, port=PORT)
 
 
 async def main():
     await set_commands()
-    for router in routers:
-        dp.include_router(router)
-
-    dp.message.middleware(LoggingMiddleware())
-    dp.callback_query.middleware(LoggingMiddleware())
+    routers_and_middleware()
 
     await bot.delete_webhook(drop_pending_updates=True)
     await bot.send_message(chat_id=68086662, text="Бот запущен локально!")

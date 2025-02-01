@@ -1,9 +1,14 @@
 from states.overall import OverallState
-from pg_maker import new_post, get_active_sublets
+from pg_maker import (
+    new_post,
+    get_active_sublets,
+    update_notifications,
+    all_users_with_city_notifications,
+)
 from handlers.free import show_variants
 from utils import show_post, make_post
 from datetime import datetime
-from keyboards import all_cities, create_markup
+from keyboards import all_cities, create_markup, make_buttons
 from config_data import config
 
 from aiogram import Router, F
@@ -43,6 +48,7 @@ async def start_post(message, state):
 async def city_callback(callback, state):
     await state.update_data(city=callback.data)
     command = (await state.get_data()).get("command", "")
+
     if command == "add_post":
         await state.set_state(OverallState.type)
         await type_of_sublet(callback.message, state)
@@ -50,6 +56,13 @@ async def city_callback(callback, state):
     elif command == "free":
         await state.set_state(OverallState.free_show)
         await show_variants(callback, state)
+
+    elif command == "notifications":
+        city = str(callback.data)
+        await state.clear()
+        await update_notifications(city=city, user_id=str(callback.from_user.id))
+        await callback.message.edit_text(f"Включены уведомления по городу {city}")
+        await make_buttons(callback)
 
 
 @router_add_post.message(OverallState.type)
@@ -120,11 +133,12 @@ async def final(message, state):
     contact = message.from_user.username or data["contact"]
     check_in_date = datetime.strptime(data["check_in"], "%Y-%m-%d")
     check_out_date = datetime.strptime(data["check_out"], "%Y-%m-%d")
+    city = data["city"]
 
     await new_post(
         username=contact,
         user_id=str(message.from_user.id),
-        city=data["city"],
+        city=city,
         address=data["address"],
         type=data["type"],
         description=data["description"],
@@ -135,8 +149,10 @@ async def final(message, state):
 
     all_info_and_photos = await get_active_sublets(flag="last_post")
     result = await make_post(all_info_and_photos)
+    user_ids = await all_users_with_city_notifications(city)
+    user_ids.remove(str(message.from_user.id))
 
-    await show_post(message, result, is_admin=True)
+    await show_post(message, result, is_admin=True, users_for_notifications=user_ids)
     buttons = [
         ("Посмотреть или отредактировать мои объявления", "edit_post"),
         ("⬇⬇⬇ Назад в меню ⬇⬇⬇", "start"),

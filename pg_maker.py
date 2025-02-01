@@ -30,23 +30,26 @@ async def new_table():
         (
         id SERIAL PRIMARY KEY,
         username VARCHAR,
-        user_id VARCHAR,
+        user_id VARCHAR NOT NULL,
         city VARCHAR, 
         address VARCHAR, 
         type VARCHAR, 
-        description VARCHAR NULL, 
+        description VARCHAR, 
         date_in DATE,
         date_out DATE,
         is_active BOOL DEFAULT TRUE,
-        photo1 VARCHAR NULL,
-        photo2 VARCHAR NULL,
-        photo3 VARCHAR NULL,
-        photo4 VARCHAR NULL,
-        photo5 VARCHAR NULL,
-        photo6 VARCHAR NULL,
-        photo7 VARCHAR NULL,
-        photo8 VARCHAR NULL,
+        photo1 VARCHAR,
+        photo2 VARCHAR,
+        photo3 VARCHAR,
+        photo4 VARCHAR,
+        photo5 VARCHAR,
+        photo6 VARCHAR,
+        photo7 VARCHAR,
+        photo8 VARCHAR,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        CONSTRAINT fk_user_id FOREIGN KEY (user_id) -- Ссылка на таблицу users
+        REFERENCES public.users(user_id)
+        ON DELETE CASCADE
         );
         """
         await conn.execute(sql)
@@ -57,9 +60,10 @@ async def create_users():
         sql = """
         CREATE TABLE IF NOT EXISTS public.users 
         (
-        username VARCHAR,
-        user_id VARCHAR,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            id SERIAL PRIMARY KEY,
+            username VARCHAR,
+            user_id VARCHAR UNIQUE NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
         """
         await conn.execute(sql)
@@ -81,6 +85,16 @@ async def add_user(username, user_id):
             await conn.execute(sql, username, user_id)
 
 
+async def update_notifications(city, user_id):
+    async with db_connection() as conn:
+        sql = """
+        UPDATE public.users
+        SET notifications = $1
+        WHERE user_id = $2;
+        """
+        await conn.execute(sql, city, user_id)
+
+
 async def all_users_from_db():
     async with db_connection() as conn:
         sql = """SELECT username, user_id FROM public.users"""
@@ -90,6 +104,25 @@ async def all_users_from_db():
         ]
         formatted_usernames = "\n".join(usernames)
         return formatted_usernames
+
+
+async def all_users_with_city_notifications(city):
+    async with db_connection() as conn:
+        sql = """SELECT user_id FROM public.users WHERE notifications IN ($1, 'ВСЕ')"""
+        all_us = await conn.fetch(sql, city)
+        user_ids = [f"{record['user_id']}" for record in all_us]
+        return user_ids
+
+
+async def is_notifications_on(user_id):
+    async with db_connection() as conn:
+        sql = """SELECT notifications FROM public.users WHERE user_id = $1"""
+        record = await conn.fetchrow(sql, user_id)
+
+        if record is None:
+            return False
+
+        return bool(record["notifications"])
 
 
 async def delete_table():
@@ -104,7 +137,7 @@ async def new_post(
     username, user_id, city, address, type, date_in, date_out, description, photos
 ):
     async with db_connection() as conn:
-        await new_table()
+        # await new_table()
 
         photo_values = photos[:8] if photos else [None] * 8
         photo_values += [None] * (8 - len(photo_values))
