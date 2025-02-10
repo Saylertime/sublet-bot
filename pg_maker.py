@@ -193,6 +193,18 @@ async def find_all_sublets():
         return result
 
 
+async def deactivate_active_sublets(date):
+    async with db_connection() as conn:
+        sql = """
+            UPDATE public.sublets
+            SET is_active = FALSE
+            WHERE date_out < $1 AND is_active = TRUE 
+            RETURNING "user_id", "address";
+        """
+        rows = await conn.fetch(sql, date)
+        return rows
+
+
 async def type_of_sublet(post_id):
     async with db_connection() as conn:
         sql = """SELECT type 

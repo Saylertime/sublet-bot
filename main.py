@@ -4,10 +4,13 @@ from aiogram.types import BotCommand, BotCommandScopeDefault
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 from aiohttp import web
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
 from config_data import config
 from handlers import routers
 from loader import bot, dp
 from middlewares.logging_middleware import LoggingMiddleware
+from utils.check_db import deactivate_old_sublets
 
 
 LOCAL_ENV = config.LOCAL_ENV
@@ -46,7 +49,6 @@ async def on_shutdown() -> None:
 
 
 def main_webhook() -> None:
-
     routers_and_middleware()
     dp.startup.register(on_startup)
     dp.shutdown.register(on_shutdown)
@@ -55,7 +57,14 @@ def main_webhook() -> None:
     webhook_requests_handler = SimpleRequestHandler(dispatcher=dp, bot=bot)
     webhook_requests_handler.register(app, path=WEBHOOK_PATH)
     setup_application(app, dp, bot=bot)
-    web.run_app(app, host=HOST, port=PORT)
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    scheduler = AsyncIOScheduler(event_loop=loop)
+    scheduler.add_job(deactivate_old_sublets, trigger="cron", hour=15, minute=0)
+    scheduler.start()
+
+    web.run_app(app, host=HOST, port=PORT, loop=loop)
 
 
 async def main():
