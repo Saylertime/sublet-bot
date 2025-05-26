@@ -33,7 +33,8 @@ async def handle_album_photo(message, state):
     if group_id not in media_groups:
         media_groups[group_id] = []
 
-    media_groups[group_id].append(message.photo[-1].file_id)
+    if message.photo:
+        media_groups[group_id].append(message.photo[-1].file_id)
 
     if group_id in timers:
         timers[group_id].cancel()

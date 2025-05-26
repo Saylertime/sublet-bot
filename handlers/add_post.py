@@ -150,7 +150,9 @@ async def final(message, state):
     all_info_and_photos = await get_active_sublets(flag="last_post")
     result = await make_post(all_info_and_photos)
     user_ids = await all_users_with_city_notifications(city)
-    user_ids.remove(str(message.from_user.id))
+    user_id_str = str(message.from_user.id)
+    if user_id_str in user_ids:
+        user_ids.remove(user_id_str)
 
     await show_post(message, result, is_admin=True, users_for_notifications=user_ids)
     buttons = [
