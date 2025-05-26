@@ -28,6 +28,9 @@ async def handle_photos(message, state):
 
 
 async def handle_album_photo(message, state):
+    if not getattr(message, "media_group_id", None) or not message.photo:
+        return
+
     group_id = message.media_group_id
 
     if group_id not in media_groups:
